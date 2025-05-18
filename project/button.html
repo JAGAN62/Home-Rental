@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Circle Spinner Button</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: #f0f4f8;
+      font-family: sans-serif;
+    }
+
+    .btn-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 40px 0;
+    }
+
+    .circle-spinner-btn {
+      position: relative;
+      padding: 14px 36px;
+      background: #007BFF; /* Blue background */
+      color: white;
+      font-weight: 600;
+      font-size: 16px;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      z-index: 1;
+      overflow: hidden;
+    }
+
+    .circle-spinner-btn::before {
+      content: "";
+      position: absolute;
+      top: -6px;
+      left: -6px;
+      right: -6px;
+      bottom: -6px;
+      background: conic-gradient(
+        from 0deg,
+        #ffea00,
+        #ff4d00,
+        #39ff14,
+        #ff0055,
+        #ffffff,
+        #ffea00
+      );
+      border-radius: 50px;
+      z-index: -2;
+      animation: spin 3s linear infinite;
+    }
+
+    .circle-spinner-btn::after {
+      content: "";
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      right: 3px;
+      bottom: 3px;
+      background: #007BFF;
+      border-radius: 45px;
+      z-index: -1;
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0turn);
+      }
+      100% {
+        transform: rotate(1turn);
+      }
+    }
+
+    /* Responsive for small screens */
+    @media (max-width: 600px) {
+      .btn-container {
+        padding: 20px;
+        text-align: center;
+      }
+
+      .circle-spinner-btn {
+        font-size: 14px;
+        padding: 12px 28px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="btn-container">
+    <button class="circle-spinner-btn">Join Now</button>
+  </div>
+</body>
+</html>

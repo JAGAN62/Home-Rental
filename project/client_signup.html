@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Signup Page</title>
+  <link rel="stylesheet" href="client_signup.css">
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav>
+    <div class="logo">
+      <img title="Home" onclick="window.open('index.html')" src="https://img.freepik.com/premium-psd/modern-house-transparency-background-psd_693425-20565.jpg" alt="Logo" />
+      House Rental
+    </div>
+
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="Host.html">Rent out users</a>
+      <a href="properties.html">Properties</a>
+      <a href="about.html">About</a>
+      <!-- <button onclick="window.open('host_login.html')">Logout</button> -->
+    </div>
+
+    <div class="hamburger" id="hamburger">
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
+  </nav>
+
+  <!-- Side Menu -->
+  <div class="side-nav" id="sideNav">
+    <a href="index.html">Home</a>
+    <a href="Host.html">Rent out users</a>
+    <a href="properties.html">Properties</a>
+    <a href="about.html">About</a>
+  </div>
+
+<!-- Signup Form -->
+<div class="main-content">
+  <div class="container">
+    <h2>Sign Up</h2>
+    <form id="signup-form">
+      <input type="text" id="user-name" placeholder="User Name" required>
+      <input type="email" id="signup-email" placeholder="Email" required>
+      <input type="password" id="signup-password" placeholder="Password" required>
+      <button type="submit" id="signup-btn">Sign Up</button>
+    </form>
+    <p>Already have an account? <a href="client_login.html">Login</a></p>
+    <div id="alert" class="alert"></div>
+  </div>
+</div>
+
+<script>
+// Server URL
+const url = "http://localhost:8000/client_data";
+
+// DOM elements
+const signupForm = document.getElementById("signup-form");
+const signupBtn = document.getElementById("signup-btn");
+const alertBox = document.getElementById("alert");
+const userName = document.getElementById("user-name");
+const signupEmail = document.getElementById("signup-email");
+const signupPassword = document.getElementById("signup-password");
+
+// Function to show alert messages
+function showAlert(message, type = "success") {
+  alertBox.textContent = message;
+  alertBox.className = type === "error" ? "alert error" : "alert";
+  alertBox.style.display = "block";
+  
+  // Hide alert after 3 seconds
+  setTimeout(() => {
+    alertBox.style.display = "none";
+  }, 2000);
+}
+
+// Function to handle form submission
+async function handleSignup(event) {
+  // Prevent default form submission
+  if (event) event.preventDefault();
+  
+  // Get form values and trim whitespace
+  const name = userName.value.trim();
+  const email = signupEmail.value.trim();
+  const password = signupPassword.value.trim();
+  
+  // Validate form fields
+  if (!name || !email || !password) {
+    showAlert("Please fill all the fields", "error");
+    return;
+  }
+  
+  // Disable button and show loading state
+  signupBtn.disabled = true;
+  signupBtn.textContent = "Signing up...";
+  
+  // Create user object
+  const userData = {
+    id: email,
+    user_id: email,
+    user_name: name,
+    password: password
+  };
+  
+  try {
+    console.log("Sending signup request to server...");
+    
+    // Send POST request to server
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(userData)
+    });
+    
+    // Check if request was successful
+    if (!response.ok) {
+      throw new Error(`Server returned ${response.status}: ${response.statusText}`);
+    }
+    
+    // Try to parse response as JSON (optional)
+    const data = await response.json().catch(() => ({}));
+    console.log("Signup successful:", data);
+    
+    // Show success message
+    showAlert("Signup successful! Redirecting to login page...");
+    
+    // Store signup email in localStorage (helpful for auto-filling login form)
+    localStorage.setItem("registeredEmail", email);
+    
+    // Redirect to login page (using multiple methods for reliability)
+    console.log("Redirecting to login page...");
+    
+    // Method 1: Direct navigation
+    window.location.href = "client_login.html";
+    
+    // Method 2: Fallback redirect after a short delay
+    setTimeout(() => {
+      window.location.replace("client_login.html");
+    }, 2000);
+    
+  } catch (error) {
+    // Log and show error
+    console.error("Signup error:", error);
+    showAlert(`Signup failed: ${error.message}`, "error");
+    
+    // Reset button state
+    signupBtn.disabled = false;
+    signupBtn.textContent = "Sign Up";
+  }
+}
+
+// Event Listeners
+signupForm.addEventListener("submit", handleSignup);
+
+// Additional event listener for manually clicking the button (backup)
+signupBtn.addEventListener("click", function(e) {
+  // Only trigger if not part of a form submission
+  if (e.target.form && !e.target.form.reportValidity()) {
+    e.preventDefault();
+    handleSignup();
+  }
+});
+
+// Log that script loaded successfully
+console.log("Signup page script loaded and ready");
+</script>
+
+<script>
+  document.getElementById('hamburger').addEventListener('click', function () {
+    document.getElementById('sideNav').classList.toggle('open');
+    this.classList.toggle('active');
+  });
+</script>
+</body>
+</html>

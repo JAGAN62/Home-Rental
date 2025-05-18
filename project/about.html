@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About | Find My Home</title>
+  <link rel="stylesheet" href="about.css">
+  <link rel="stylesheet" href="scrollBar.css">
+
+</head>
+<body>
+<!-- Navigation -->
+  <nav>
+    <div class="logo">
+      <img title="Home" onclick="window.open('index.html')" src="https://img.freepik.com/premium-psd/modern-house-transparency-background-psd_693425-20565.jpg" alt="Logo" />
+      House Rental
+    </div>
+
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="Host.html">Rent out users</a>
+      <a href="properties.html">Properties</a>
+      <!-- <a href="about.html">About</a> -->
+      <!-- <button onclick="window.open('host_login.html')">Logout</button> -->
+    </div>
+
+    <div class="hamburger" id="hamburger">
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
+  </nav>
+
+  <!-- Side Menu -->
+  <div class="side-nav" id="sideNav">
+    <a href="index.html">Home</a>
+    <a href="Host.html">Rent out users</a>
+    <a href="properties.html">Properties</a>
+    <!-- <a href="about.html">About</a> -->
+  </div>
+
+  <script>
+  document.getElementById('hamburger').addEventListener('click', function () {
+    document.getElementById('sideNav').classList.toggle('open');
+    this.classList.toggle('active');
+  });
+</script>
+
+
+
+  <header class="hero">
+    <h1>Find Your Dream Home Today</h1>
+  </header>
+
+  <main class="container">
+    <section class="two-col">
+      <img src="https://images.unsplash.com/photo-1570129477492-45c003edd2be" alt="Home">
+      <div class="text">
+        <h2>Who We Are</h2>
+        <p>We are a passionate team dedicated to transforming the way people find rental homes. Our platform empowers tenants and landlords with powerful tools, stunning design, and a seamless user experience.</p>
+      </div>
+    </section>
+
+    <section class="rotating-section">
+      <h2>Mission-Driven Platform</h2>
+      <p>To make home discovery easier, transparent, and safer through innovation and trust.</p>
+    </section>
+
+    <section>
+      <h2>Platform Highlights</h2>
+      <div class="features">
+        <div class="feature">
+          <h3>Secure Logins</h3>
+          <p>Login with cookies or Google Auth to ensure your data is safe.</p>
+        </div>
+        <div class="feature">
+          <h3>Live Map View</h3>
+          <p>Track properties on a real-time map before making decisions.</p>
+        </div>
+        <div class="feature">
+          <h3>Responsive UI</h3>
+          <p>Works flawlessly on phones, tablets, and desktops with smart transitions.</p>
+        </div>
+        <div class="feature">
+          <h3>Property Dashboard</h3>
+          <p>Landlords manage their own listings easily with image upload, editing & delete options.</p>
+        </div>
+        <div class="feature">
+          <h3>Advanced Filters</h3>
+          <p>Price range, city, locality, user type—find your perfect match faster.</p>
+        </div>
+        <div class="feature">
+          <h3>Modern Tech Stack</h3>
+          <p>HTML5, CSS3, JavaScript, Firebase, Google Maps API, and JSON Server integration.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="team-section">
+      <h2>Meet the Developers</h2>
+      <div class="team-members">
+        <div class="member">
+          <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Dev1">
+          <h3>Mamanduru Jagan</h3>
+          <p>Frontend Developer</p>
+        </div>
+        <div class="member">
+          <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Dev2">
+          <h3>Venkatesh</h3>
+          <p>UI/UX Design</p>
+        </div>
+        <div class="member">
+          <img src="https://randomuser.me/api/portraits/men/76.jpg" alt="Dev3">
+          <h3>Hemanth Kumar</h3>
+          <p>Backend Logic</p>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Display Data</title>
+  <link rel="stylesheet" href="scrollBar.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      margin: 0;
+      padding: 20px;
+    }
+    h3{
+     color:rgb(0, 89, 255);
+     text-align: center;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: auto;
+      padding: 20px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .entry {
+      border-bottom: 1px solid #ddd;
+      padding: 10px 0;
+      animation: fadeIn 0.4s ease-in;
+    }
+
+    .entry:last-child {
+      border-bottom: none;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <h3>User Messages</h3>
+
+  <div class="container">
+  </div>
+
+  <script>
+    const data = localStorage.getItem('key');
+    const container = document.querySelector('.container');
+
+    if (data) {
+      const info = JSON.parse(data);
+
+      // If it's an array of objects (multiple entries)
+      if (Array.isArray(info)) {
+        info.forEach((entry, index) => {
+          const entryDiv = document.createElement("div");
+          entryDiv.classList.add("entry");
+
+          for (let [key, value] of Object.entries(entry)) {
+            const p = document.createElement("p");
+            p.innerHTML = `<strong>${key}:</strong> ${value}`;
+            entryDiv.appendChild(p);
+          }
+
+          container.appendChild(entryDiv);
+        });
+      } 
+      // If it's a single object
+      else if (typeof info === "object") {
+        const entryDiv = document.createElement("div");
+        entryDiv.classList.add("entry");
+
+        for (let [key, value] of Object.entries(info)) {
+          const p = document.createElement("p");
+          p.innerHTML = `<strong>${key}:</strong> ${value}`;
+          entryDiv.appendChild(p);
+        }
+
+        container.appendChild(entryDiv);
+      } else {
+        container.innerHTML = "<p>No valid data found.</p>";
+      }
+    } else {
+      container.innerHTML = "<p>No data found in localStorage.</p>";
+    }
+  </script>
+</body>
+</html>

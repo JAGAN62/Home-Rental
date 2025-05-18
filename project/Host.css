@@ -1,0 +1,538 @@
+
+     * {
+      box-sizing: border-box;
+      font-family: "Segoe UI", sans-serif;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background: #f9fafb;
+      color: #333;
+      overflow-x: hidden;
+      overflow-y: auto;
+      overscroll-behavior: none;
+      transition: all 0.3s ease; /* For background dimming effect */
+    }
+
+    body.dimmed {
+      background-color: rgba(249, 250, 251, 0.5);
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      background: #111827;
+      color: white;
+    }
+
+    header h1 {
+      font-size: 1.5rem;
+    }
+
+    #logout-btn {
+      padding: 0.5rem 1rem;
+      background: #ef4444;
+      border: none;
+      border-radius: 8px;
+      color: white;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background 0.3s ease;
+    }
+
+    #logout-btn:hover {
+      background: #dc2626;
+    }
+
+    /* Modal overlay for form section */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1001;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    /* Loading container */
+    .loader-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(255, 255, 255, 0.9);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+        
+    .loader {
+      width: 48px;
+      height: 48px;
+      border: 5px solid #f3f3f3;
+      border-top: 5px solid #2563eb;
+      border-radius: 50%;
+      animation: rotate 1s infinite linear;
+      margin-bottom: 15px;
+    }
+        
+    .loading-text {
+      font-size: 18px;
+      color: #333;
+      font-weight: 500;
+    }
+        
+    @keyframes rotate {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* Add Rent Out button */
+    .add-rentout-btn {
+      position: fixed;
+      top: 85px;
+      right: 20px;
+      padding: 0.7rem 1.2rem;
+      background: #2563eb;
+      border: none;
+      border-radius: 8px;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      z-index: 100;
+      transition: background 0.3s ease, transform 0.2s;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+
+    .add-rentout-btn:hover {
+      background: #1d4ed8;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+
+    /* Close button for modal */
+    .close-btn {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: none;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+      color: #4b5563;
+      transition: color 0.3s ease;
+    }
+
+    .close-btn:hover {
+      color: #111827;
+    }
+
+    .form-section {
+      background: white;
+      padding: 2rem;
+      max-width: 600px;
+      margin: 2rem auto;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      position: relative;
+      transform: translateY(-30px);
+      opacity: 0;
+      transition: all 0.3s ease;
+      width: 90%;
+    }
+
+    .modal-overlay.active .form-section {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    
+    input{
+      width:17vw;
+    }
+
+    .form-section h2 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    input[type="file"] {
+      padding: 0.8rem;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      font-size: 1rem;
+
+    }
+
+    .submit-btn {
+      grid-column: span 2;
+      padding: 0.8rem;
+      background: #2563eb;
+      color: white;
+      font-weight: bold;
+      border: none;
+      width:10vw;
+      margin-left: auto;
+      margin-right: auto;
+      margin-top: 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .submit-btn:hover {
+      background: #1d4ed8;
+    }
+
+    #cards-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 2rem;
+      padding: 2rem;
+      flex: 1;
+      place-items: center;
+    }
+
+    .preview {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  width: 320px; /* card width */
+  height: 450px; /* card height */
+}
+
+.preview img {
+  width: 100%;
+  height: 200px; /* fixed image height */
+  object-fit: cover;
+}
+
+.preview-content {
+  /* padding: 1rem; */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  flex-grow: 1;
+  gap: 6px; 
+}
+
+.preview-content h3 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.3rem;
+}
+
+.preview-content > p {
+  margin: 0.2rem 0;
+  font-size: 0.95rem;
+  color:red
+}
+
+.actions {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: auto; /* this pushes buttons to bottom */
+  padding-bottom: 1rem;
+}
+
+
+    .actions button {
+      margin-right: 0.5rem;
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 6px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .actions button:first-child {
+      background: #10b981;
+      padding:8px 25px;
+      color: white;
+    }
+
+    .actions button:first-child:hover {
+      background: #059669;
+    }
+
+    .actions button:last-child {
+      background: #ef4444;
+      color: white;
+    }
+
+    .actions button:last-child:hover {
+      background: #dc2626;
+    }
+    nav {
+      background-color: #1e293b;
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0px 10px;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+    nav .logo {
+      display: flex;
+      align-items: center;
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+    nav .logo img {
+      width: 40px;
+      height: 40px;
+      margin-right: 10px;
+      border-radius: 50%;
+    }
+    nav ul {
+      display: flex;
+      gap: 20px;
+      list-style: none;
+      align-items: center;
+    }
+    nav ul li a {
+      color: white;
+      text-decoration: none;
+      font-weight: 500;
+      padding: 8px 12px;
+      border-radius: 6px;
+      transition: background 0.3s;
+    }
+    /* nav ul li a:hover { background: #334155; } */
+    .login-btn {
+      background-color: #0ea5e9;
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .login-btn:hover { background-color: #0284c7; }
+
+    .fancy-input {
+  padding: 14px 12px;
+  font-size: 16px;
+  border: 2px solid gray;
+  border-radius: 5px;
+  transition: border-color 0.3s, color 0.3s;
+  outline:none;
+}
+
+.fancy-input:focus {
+  border-color: blue;
+  outline: none;
+}
+
+/* Placeholder animation (faux float effect) */
+.fancy-input::placeholder {
+  color: gray;
+  transition: all 0.3s ease;
+  transform: translateY(0px);
+}
+
+
+.fancy-input:focus::placeholder {
+  transform: translateY(-20px);
+  font-size: 12px;
+  color: blue;
+  font-size: 14px;
+}
+
+nav {
+      background-color: #1e293b;
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 30px;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+
+    .logo img {
+      width: 40px;
+      height: 40px;
+      object-fit: cover;
+      margin-right: 10px;
+      cursor: pointer;
+      border-radius: 50%;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+    }
+
+    .nav-links a {
+      color: white;
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+
+    .nav-links a:hover {
+      color: #38bdf8;
+    }
+
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      cursor: pointer;
+      gap: 5px;
+    }
+
+    .hamburger div {
+      width: 25px;
+      height: 3px;
+      background: white;
+      transition: all 0.3s ease;
+    }
+
+    .hamburger.active div:nth-child(1) {
+      transform: rotate(45deg) translate(5px, 5px);
+    }
+
+    .hamburger.active div:nth-child(2) {
+      opacity: 0;
+    }
+
+    .hamburger.active div:nth-child(3) {
+      transform: rotate(-45deg) translate(6px, -6px);
+    }
+
+    .side-nav {
+      position: fixed;
+      top: 0;
+      left: -100%;
+      height: 100%;
+      width: 200px;
+      background-color: #1e293b;
+      padding-top: 70px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      padding-left: 20px;
+      transition: left 0.3s ease;
+      z-index: 999;
+    }
+
+    .side-nav a {
+      color: white;
+      text-decoration: none;
+      font-size: 1.1rem;
+      transition: color 0.3s;
+    }
+
+    .side-nav a:hover {
+      color: #38bdf8;
+    }
+
+    .side-nav.open {
+      left: 0;
+    }
+
+.nav-links button {
+  background-color: #0ea5e9;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background 0.3s, transform 0.2s;
+}
+
+.nav-links button:hover {
+  background-color: #0284c7;
+  transform: scale(1.05);
+}
+
+
+    @media (max-width: 600px) {
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .submit-btn {
+        grid-column: span 1;
+        width: 100%;
+      }
+      .actions{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap:20px
+      }
+
+
+      nav {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .nav-links {
+        display: none;
+      }
+
+      .hamburger {
+        display: flex;
+        margin-left: auto;
+      }
+
+      input{
+        width:70vw
+      }
+
+      .add-rentout-btn {
+        top: 70px;
+        right: 10px;
+        padding: 0.5rem 1rem;
+      }
+    }
+    
