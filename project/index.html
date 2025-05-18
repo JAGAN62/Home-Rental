@@ -162,29 +162,6 @@
         console.error("Error loading properties:", err);
         // Create sample data for testing if server is not available
         const sampleData = [
-          // {
-          //   id: "sample1",
-          //   rentouts: [
-          //     {
-          //       houseName: "House",
-          //       location: "naidupet",
-          //       price: "6500",
-          //       contact: "1234567897",
-          //       beds: "2",
-          //       propertyType: "apartment",
-          //       imageUrl: "https://via.placeholder.com/235x180"
-          //     },
-          //     {
-          //       houseName: "Villa",
-          //       location: "Hyderabad",
-          //       price: "12000",
-          //       contact: "9876543210",
-          //       beds: "3",
-          //       propertyType: "villa",
-          //       imageUrl: "https://via.placeholder.com/235x180"
-          //     }
-          //   ]
-          // }
         ];
         allData = sampleData;
         renderProperties(sampleData);
@@ -374,7 +351,7 @@
         const greet = document.createElement('span');
         greet.style.color = '#38bdf8';
         greet.style.fontWeight = '600';
-        greet.textContent = `Hello, ${userName || userEmail.split('@')[0]}`;
+        greet.textContent = `Hello! ${userName || userEmail.split('@')[0]}`;
         // greet.textContent = `Hello, ${userName}`;
         navLinks.appendChild(greet);
       }
