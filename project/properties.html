@@ -7,9 +7,254 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
   <link rel="stylesheet" href="properties.css">
   <link rel="stylesheet" href="scrollBar.css">
+  <style>
+     * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Segoe UI", sans-serif;
+    }
+    /* Additional styles for better presentation */
+    .loader-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.9);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
 
+    .loader {
+      width: 50px;
+      height: 50px;
+      border: 5px solid #f3f3f3;
+      border-top: 5px solid #3498db;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    .loading-text {
+      margin-top: 20px;
+      font-size: 18px;
+      color: #333;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .search-container {
+      max-width: 1200px;
+      margin: 20px auto;
+      padding: 20px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .search-container input,
+    .search-container select,
+    .search-container button {
+      padding: 10px 15px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-size: 14px;
+    }
+
+    .search-container input {
+      flex: 1;
+      min-width: 250px;
+    }
+
+    .search-container button {
+      background: #e74c3c;
+      color: white;
+      border: none;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .search-container button:hover {
+      background: #c0392b;
+    }
+
+    .property-card {
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      margin-bottom: 20px;
+    }
+
+    .property-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    }
+
+    .property-image {
+      position: relative;
+      height: 200px;
+      overflow: hidden;
+    }
+
+    .property-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: scale 0.3s ease;
+    }
+
+    .property-card:hover .property-image img {
+      scale: 1.05;
+    }
+
+    .property-badge {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: #27ae60;
+      color: white;
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .property-info {
+      padding: 20px;
+    }
+
+    .property-info h3 {
+      color: #2c3e50;
+      margin-bottom: 15px;
+      font-size: 24px;
+    }
+
+    .property-details {
+      display: grid;
+      gap: 10px;
+      /* margin-bottom: 20px; */
+    }
+
+    .detail-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      /* padding: 8px 0; */
+      border-bottom: 1px solid #ecf0f1;
+    }
+
+    .detail-label {
+      font-weight: 600;
+      color: #34495e;
+    }
+
+    .detail-value {
+      color: #2c3e50;
+      font-weight: 500;
+    }
+
+    .property-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .contact-btn,
+    .details-btn {
+      flex: 1;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .contact-btn {
+      background: #3498db;
+      color: white;
+    }
+
+    .contact-btn:hover {
+      background: #2980b9;
+    }
+
+    .details-btn {
+      background: #95a5a6;
+      color: white;
+    }
+
+    .details-btn:hover {
+      background: #7f8c8d;
+    }
+
+    .no-properties,
+    .no-results,
+    .error-message {
+      text-align: center;
+      padding: 60px 20px;
+      color: #7f8c8d;
+    }
+
+    .error-message button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background: #3498db;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .property-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 20px;
+    }
+
+    @media (max-width: 768px) {
+      .search-container {
+        flex-direction: column;
+      }
+      
+      .search-container input,
+      .search-container select,
+      .search-container button {
+        width: 100%;
+      }
+
+      .property-container {
+        grid-template-columns: 1fr;
+        padding: 10px;
+      }
+
+      .property-actions {
+        flex-direction: column;
+      }
+    }
+  </style>
 </head>
 <body>
+  <!-- Loading animation -->
+  <div class="loader-container" id="loader">
+    <div class="loader"></div>
+    <div class="loading-text">Loading Properties...</div>
+  </div>
+
   <!-- Navigation -->
   <nav>
     <div class="logo">
@@ -46,6 +291,26 @@
     <p>Find your dream home in top locations</p>
   </header>
 
+  <!-- Search and Filter Section -->
+  <div class="search-container">
+    <input type="text" id="searchInput" placeholder="Search by location or house name..." />
+    <select id="bedsFilter">
+      <option value="">All Beds</option>
+      <option value="1">1 Bed</option>
+      <option value="2">2 Beds</option>
+      <option value="3">3 Beds</option>
+      <option value="4">4+ Beds</option>
+    </select>
+    <select id="priceFilter">
+      <option value="">All Prices</option>
+      <option value="0-10000">Under ₹10,000</option>
+      <option value="10000-25000">₹10,000 - ₹25,000</option>
+      <option value="25000-50000">₹25,000 - ₹50,000</option>
+      <option value="50000-999999">Above ₹50,000</option>
+    </select>
+    <button id="clearFilters">Clear Filters</button>
+  </div>
+
   <main class="property-container" id="propertyList">
     <!-- Properties will be loaded here -->
   </main>
@@ -55,6 +320,13 @@
   </footer>
 
   <script>
+    // Configuration
+    const USE_LOCALHOST_API = false; // Set to true when backend is ready
+    const API_URL = "http://localhost:3000/clients";
+    
+    let allProperties = []; // Store all properties for filtering
+    let filteredProperties = []; // Store filtered properties
+
     // Helper function to get cookie value
     function getCookie(name) {
       const cookieArr = document.cookie.split("; ");
@@ -66,67 +338,232 @@
     }
 
     // Check login status from cookies
-    const userEmail = getCookie("userEmail");
-    const isLoggedIn = getCookie("isLoggedIn");
+    function checkLoginStatus() {
+      const userEmail = getCookie("userEmail");
+      const isLoggedIn = getCookie("isLoggedIn");
 
-    if (!userEmail || isLoggedIn !== "true") {
-      alert("Access denied. Please login first.");
-      window.location.href = "client_login.html";
-    } else {
-      const url = "http://localhost:3000/clients";
-
-      const loadProperties = async () => {
-        try {
-          const res = await fetch(url);
-          const clients = await res.json();
-
-          const main = document.getElementById("propertyList");
-          main.innerHTML = "";
-
-          clients.forEach(client => {
-            const rentouts = client.rentouts || [];
-
-            rentouts.forEach(rentout => {
-              if (
-                rentout.houseName &&
-                rentout.imageUrl &&
-                rentout.beds &&
-                rentout.contact && 
-                rentout.price &&
-                rentout.location
-              ) {
-                const card = document.createElement("div");
-                card.className = "property-card animate__animated animate__fadeInUp";
-                card.setAttribute('title','Read only')
-
-                card.innerHTML = `
-                  <img src="${rentout.imageUrl}" alt="${rentout.houseName}" />
-                  <div class="property-info ">
-                    <h3 style="color: #16a085">${rentout.houseName}</h3>
-                    <p><strong style="color:blue">Rent : &nbsp &nbsp &nbsp &nbsp </strong>₹${rentout.price}/Month</p>
-                    <p><strong style="color:blue">Beds : &nbsp &nbsp &nbsp &nbsp &nbsp</strong> ${rentout.beds}</p>
-                    <p><strong style="color:blue">contact :&nbsp &nbsp &nbsp</strong> ${rentout.contact}</p>
-                    <p><strong style="color:blue">Location : &nbsp &nbsp</strong> ${rentout.location}</p>
-                  </div>
-                `;
-
-                main.appendChild(card);
-              }
-            });
-          });
-        } catch (error) {
-          console.error("Failed to load properties:", error);
-          document.getElementById("propertyList").innerHTML = "<p style='text-align:center; color:grey;'>Failed to load properties. Try again later.</p>";
-        }
-      };
-
-      loadProperties();
+      if (!userEmail || isLoggedIn !== "true") {
+        alert("Access denied. Please login first.");
+        window.location.href = "client_login.html";
+        return false;
+      }
+      return true;
     }
 
-    // Hamburger menu functionality
-    document.getElementById('hamburger').addEventListener('click', function() {
-      this.classList.toggle('active');
-      document.getElementById('sideNav').classList.toggle('open');
+    // Load properties from localStorage (fallback)
+    function loadFromLocalStorage() {
+      const allClients = [];
+      // Get all client data from localStorage
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && key.startsWith('client_')) {
+          try {
+            const clientData = JSON.parse(localStorage.getItem(key));
+            if (clientData && clientData.rentouts) {
+              allClients.push(clientData);
+            }
+          } catch (error) {
+            console.error("Error parsing localStorage data:", error);
+          }
+        }
+      }
+      return allClients;
+    }
+
+    // Load properties from API or localStorage
+    const loadProperties = async () => {
+      try {
+        let clients = [];
+        
+        if (USE_LOCALHOST_API) {
+          // Try to fetch from API
+          const res = await fetch(API_URL);
+          if (!res.ok) {
+            throw new Error(`HTTP error! status: ${res.status}`);
+          }
+          clients = await res.json();
+        } else {
+          // Use localStorage as fallback
+          clients = loadFromLocalStorage();
+          console.log("Loading properties from localStorage:", clients);
+        }
+
+        // Extract all properties from all clients
+        allProperties = [];
+        clients.forEach(client => {
+          const rentouts = client.rentouts || [];
+          rentouts.forEach(rentout => {
+            if (rentout.houseName && rentout.price && rentout.location) {
+              allProperties.push({
+                ...rentout,
+                clientId: client.id
+              });
+            }
+          });
+        });
+
+        filteredProperties = [...allProperties];
+        displayProperties(filteredProperties);
+        
+        if (allProperties.length === 0) {
+          document.getElementById("propertyList").innerHTML = `
+            <div class="no-properties">
+              <h3>No Properties Available</h3>
+              <p>There are currently no properties listed. Please check back later!</p>
+            </div>
+          `;
+        }
+
+      } catch (error) {
+        console.error("Failed to load properties:", error);
+        document.getElementById("propertyList").innerHTML = `
+          <div class="error-message">
+            <h3>Unable to Load Properties</h3>
+            <p>There was an error loading the properties. Please check if the server is running or try again later.</p>
+            <button onclick="location.reload()">Retry</button>
+          </div>
+        `;
+      } finally {
+        // Hide loading animation
+        document.getElementById("loader").style.display = "none";
+      }
+    };
+
+    // Display properties
+    function displayProperties(properties) {
+      const main = document.getElementById("propertyList");
+      main.innerHTML = "";
+
+      if (properties.length === 0) {
+        main.innerHTML = `
+          <div class="no-results">
+            <h3>No Properties Found</h3>
+            <p>Try adjusting your search criteria.</p>
+          </div>
+        `;
+        return;
+      }
+
+      properties.forEach((property, index) => {
+        const card = document.createElement("div");
+        card.className = "property-card animate__animated animate__fadeInUp";
+        card.setAttribute('title', 'Read only');
+        card.style.animationDelay = `${index * 0.1}s`;
+
+        // Handle missing image
+        const imageUrl = property.imageUrl || '/api/placeholder/400/300';
+
+        card.innerHTML = `
+          <div class="property-image">
+            <img src="${imageUrl}" alt="${property.houseName}" onerror="this.src='/api/placeholder/400/300'" />
+            <div class="property-badge">Available</div>
+          </div>
+          <div class="property-info">
+            <h3>${property.houseName}</h3>
+            <div class="property-details">
+              <div class="detail-item">
+                <span class="detail-label">Rent:</span>
+                <span class="detail-value">₹${Number(property.price).toLocaleString()}/Month</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Beds:</span>
+                <span class="detail-value">${property.beds}</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Contact:</span>
+                <span class="detail-value">${property.contact}</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Location:</span>
+                <span class="detail-value">${property.location}</span>
+              </div>
+            </div>
+            <div class="property-actions">
+              <button class="contact-btn" onclick="contactOwner('${property.contact}')">Contact Owner</button>
+              <button class="details-btn" onclick="viewDetails('${JSON.stringify(property).replace(/'/g, "\\'")}')">View Details</button>
+            </div>
+          </div>
+        `;
+
+        main.appendChild(card);
+      });
+    }
+
+    // Filter functions
+    function filterProperties() {
+      const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+      const bedsFilter = document.getElementById('bedsFilter').value;
+      const priceFilter = document.getElementById('priceFilter').value;
+
+      filteredProperties = allProperties.filter(property => {
+        // Search filter
+        const matchesSearch = !searchTerm || 
+          property.houseName.toLowerCase().includes(searchTerm) ||
+          property.location.toLowerCase().includes(searchTerm);
+
+        // Beds filter
+        const matchesBeds = !bedsFilter || 
+          (bedsFilter === '4' ? parseInt(property.beds) >= 4 : property.beds === bedsFilter);
+
+        // Price filter
+        let matchesPrice = true;
+        if (priceFilter) {
+          const [min, max] = priceFilter.split('-').map(Number);
+          const price = Number(property.price);
+          matchesPrice = price >= min && (max ? price <= max : true);
+        }
+
+        return matchesSearch && matchesBeds && matchesPrice;
+      });
+
+      displayProperties(filteredProperties);
+    }
+
+    // Clear all filters
+    function clearFilters() {
+      document.getElementById('searchInput').value = '';
+      document.getElementById('bedsFilter').value = '';
+      document.getElementById('priceFilter').value = '';
+      filteredProperties = [...allProperties];
+      displayProperties(filteredProperties);
+    }
+
+    // Contact owner function
+    function contactOwner(contact) {
+      if (contact.startsWith('http')) {
+        window.open(contact, '_blank');
+      } else {
+        window.open(`tel:${contact}`, '_self');
+      }
+    }
+
+    // View details function
+    function viewDetails(propertyData) {
+      try {
+        const property = JSON.parse(propertyData);
+        alert(`Property Details:\n\nName: ${property.houseName}\nLocation: ${property.location}\nPrice: ₹${property.price}/Month\nBeds: ${property.beds}\nContact: ${property.contact}`);
+      } catch (error) {
+        console.error('Error viewing details:', error);
+      }
+    }
+
+    // Event listeners
+    document.addEventListener('DOMContentLoaded', function() {
+      if (checkLoginStatus()) {
+        loadProperties();
+      }
+
+      // Add event listeners for filters
+      document.getElementById('searchInput').addEventListener('input', filterProperties);
+      document.getElementById('bedsFilter').addEventListener('change', filterProperties);
+      document.getElementById('priceFilter').addEventListener('change', filterProperties);
+      document.getElementById('clearFilters').addEventListener('click', clearFilters);
+
+      // Hamburger menu functionality
+      document.getElementById('hamburger').addEventListener('click', function() {
+        this.classList.toggle('active');
+        document.getElementById('sideNav').classList.toggle('open');
+      });
     });
   </script>
 </body>

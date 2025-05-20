@@ -7,104 +7,6 @@
   <title>House Rental</title>
   <link rel="stylesheet" href="index.css">
   <!-- <link rel="stylesheet" href="scrollBar.css"> -->
-  <!-- <style>
-    /* Property card styles - added inline to ensure cards display properly */
-    .properties {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 20px;
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 20px;
-    }
-
-    .property-card {
-      background: white;
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-      cursor: pointer;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .property-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-    }
-
-    /* Make the card styling exactly match properties.html */
-    .property-image {
-      position: relative;
-      height: 200px;
-      overflow: hidden;
-    }
-
-    .property-image img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: scale 0.3s ease;
-    }
-
-    .property-card:hover .property-image img {
-      scale: 1.05;
-    }
-
-    .property-badge {
-      position: absolute;
-      top: 15px;
-      right: 15px;
-      background: #27ae60;
-      color: white;
-      padding: 5px 12px;
-      border-radius: 20px;
-      font-size: 12px;
-      font-weight: bold;
-    }
-
-    .property-info {
-      padding: 20px;
-    }
-
-    .property-info h3 {
-      color: #2c3e50;
-      margin-bottom: 15px;
-      font-size: 18px;
-      margin-top: 0;
-    }
-
-    .property-details {
-      display: grid;
-      gap: 10px;
-    }
-
-    .detail-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 1px solid #ecf0f1;
-    }
-
-    .detail-label {
-      font-weight: 600;
-      color: #34495e;
-    }
-
-    .detail-value {
-      color: #2c3e50;
-      font-weight: 500;
-    }
-
-    /* Responsive design */
-    @media (max-width: 768px) {
-      .properties {
-        grid-template-columns: 1fr;
-        padding: 10px;
-      }
-    } -->
-  </style>
 </head>
 <body>
 
@@ -179,7 +81,7 @@
 
   <!-- Properties -->
   <h2>Featured Properties</h2>
-  <div class="properties" id="propertyList"></div>
+  <div class="properties"></div>
 
   <!-- Contact -->
  <section id="contact" class="contact-section">
@@ -249,183 +151,85 @@
     }
 
     let allData = [];
-    let allProperties = []; // Store all properties for filtering
 
     async function fetchAndRenderProperties() {
       try {
-        // First try loading from localStorage
-        let data = [];
-        let hasLocalData = false;
-        
-        // Loop through localStorage to find client data
-        for (let i = 0; i < localStorage.length; i++) {
-          const key = localStorage.key(i);
-          if (key && key.startsWith('client_')) {
-            try {
-              const clientData = JSON.parse(localStorage.getItem(key));
-              if (clientData && clientData.rentouts) {
-                data.push(clientData);
-                hasLocalData = true;
-              }
-            } catch (error) {
-              console.error("Error parsing localStorage data:", error);
-            }
-          }
-        }
-        
-        // If no data in localStorage, use sample data
-        if (!hasLocalData) {
-          // Sample data structure that matches your expected format
-          data = [
-            {
-              id: "sample1",
-              rentouts: [
-                {
-                  houseName: "Modern Apartment",
-                  location: "Hyderabad",
-                  price: "15000",
-                  beds: "2",
-                  contact: "9876543210",
-                  imageUrl: "https://res.cloudinary.com/demo/image/upload/sample.jpg"
-                },
-                {
-                  houseName: "Luxury Villa",
-                  location: "Bangalore",
-                  price: "25000",
-                  beds: "4",
-                  contact: "9876543211",
-                  imageUrl: "https://res.cloudinary.com/demo/image/upload/v1312461204/sample.jpg"
-                }
-              ]
-            },
-            {
-              id: "sample2",
-              rentouts: [
-                {
-                  houseName: "Cozy Studio",
-                  location: "Mumbai",
-                  price: "8000",
-                  beds: "1",
-                  contact: "9876543212",
-                  imageUrl: "https://res.cloudinary.com/demo/image/upload/flowers.jpg"
-                },
-                {
-                  houseName: "Family House",
-                  location: "Delhi",
-                  price: "18000",
-                  beds: "3",
-                  contact: "9876543213",
-                  imageUrl: "https://res.cloudinary.com/demo/image/upload/w_500/v1473681911/samples/food/spices.jpg"
-                },
-                {
-                  houseName: "Beach Villa",
-                  location: "Chennai",
-                  price: "22000",
-                  beds: "5",
-                  contact: "9876543214",
-                  imageUrl: "https://res.cloudinary.com/demo/image/upload/sample.jpg"
-                },
-                {
-                  houseName: "City Duplex",
-                  location: "Kerala",
-                  price: "12000",
-                  beds: "3",
-                  contact: "9876543215",
-                  imageUrl: "https://res.cloudinary.com/demo/image/upload/v1312461204/sample.jpg"
-                }
-              ]
-            }
-          ];
-          console.log("Using sample data since no local data found");
-        }
-        
+        const res = await fetch("http://localhost:3000/clients");
+        const data = await res.json();
         allData = data;
-        
-        // Extract all properties from clients
-        allProperties = [];
-        data.forEach(client => {
-          if (client && client.rentouts && Array.isArray(client.rentouts)) {
-            client.rentouts.forEach(property => {
-              allProperties.push(property);
-            });
-          }
-        });
-        
-        renderProperties(allProperties);
+        renderProperties(data);
       } catch (err) {
         console.error("Error loading properties:", err);
-        // Fallback to empty data array if everything fails
-        renderProperties([]);
+        // Create sample data for testing if server is not available
+        const sampleData = [
+        ];
+        allData = sampleData;
+        renderProperties(sampleData);
       }
     }
 
-    // Display properties exactly like properties.html
-    function renderProperties(properties) {
-      const main = document.getElementById("propertyList");
+    function renderProperties(data) {
+      const main = document.querySelector(".properties");
       main.innerHTML = "";
 
-      if (properties.length === 0) {
-        main.innerHTML = `
-          <div class="no-results" style="grid-column: 1/-1; text-align: center; padding: 60px 20px; color: #7f8c8d;">
-            <h3>No Properties Found</h3>
-            <p>Try adjusting your search criteria.</p>
-          </div>
-        `;
-        return;
-      }
-
-      // Filter properties based on search criteria
-      const filteredProperties = properties.filter(property => propertyMatchesFilters(property));
+      let hasData = false;
+      let count = 0;
+      let filteredProperties = [];
       
-      if (filteredProperties.length === 0) {
-        main.innerHTML = `
-          <div class="no-results" style="grid-column: 1/-1; text-align: center; padding: 60px 20px; color: #7f8c8d;">
-            <h3>No Matching Properties</h3>
-            <p>Try adjusting your search criteria.</p>
-          </div>
-        `;
-        return;
-      }
+      // First, collect all matching properties
+      data.forEach(client => {
+        if (client.rentouts && client.rentouts.length > 0) {
+          client.rentouts.forEach(property => {
+            if (propertyMatchesFilters(property)) {
+              filteredProperties.push(property);
+            }
+          });
+        }
+      });
+      
+      // Then display up to 8 properties
+      filteredProperties.slice(0, 8).forEach(property => {
+        const { houseName, location, price, imageUrl } = property;
+        
+        // Get beds value from any of the possible property names, default to "N/A"
+        const bedsValue = property.beds || property.Beds || "N/A";
 
-      // Display up to 8 properties
-      filteredProperties.slice(0, 8).forEach((property, index) => {
         const card = document.createElement("div");
         card.className = "property-card";
-        card.setAttribute('title', 'View Details');
+        card.setAttribute("title", "view Details");
+        
+        const img = document.createElement("img");
+        img.src = imageUrl || "https://via.placeholder.com/235x180";
+        card.appendChild(img);
 
-        // Handle missing image
-        const imageUrl = property.imageUrl || '/api/placeholder/400/300';
+        const name = document.createElement("h3");
+        name.innerText = houseName;
+        name.style="color:cyan";
+        card.appendChild(name);
 
-        card.innerHTML = `
-          <div class="property-image">
-            <img src="${imageUrl}" alt="${property.houseName}" onerror="this.src='/api/placeholder/400/300'" />
-            <div class="property-badge">Available</div>
-          </div>
-          <div class="property-info">
-            <h3>${property.houseName}</h3>
-            <div class="property-details">
-              <div class="detail-item">
-                <span class="detail-label">Rent:</span>
-                <span class="detail-value">₹${Number(property.price).toLocaleString()}/Month</span>
-              </div>
-              <div class="detail-item">
-                <span class="detail-label">Beds:</span>
-                <span class="detail-value">${property.beds}</span>
-              </div>
-              <div class="detail-item">
-                <span class="detail-label">Contact:</span>
-                <span class="detail-value">${property.contact || 'Contact Owner'}</span>
-              </div>
-              <div class="detail-item">
-                <span class="detail-label">Location:</span>
-                <span class="detail-value">${property.location}</span>
-              </div>
-            </div>
-          </div>
-        `;
+        const loc = document.createElement("p");
+        loc.innerHTML = '<strong style="color : blue;">Location : </strong>' + location;
+        card.appendChild(loc);
+
+        const cost = document.createElement("p");
+        cost.innerHTML = "<strong style='color:blue'>Price : </strong>" + price;
+        card.appendChild(cost);
+
+        const bedss = document.createElement("p");
+        bedss.innerHTML = "<strong style='color:blue'>Beds : </strong>" + bedsValue;
+        card.appendChild(bedss);
 
         main.appendChild(card);
+        hasData = true;
+        count++;
       });
+
+      if (!hasData) {
+        const noData = document.createElement("div");
+        noData.style.cssText = "grid-column: 1/-1; text-align: center; font-size: 18px; padding: 20px; color: #333;";
+        noData.innerText = "No matching properties found.";
+        main.appendChild(noData);
+      }
 
       addCardClickListeners(); // Add event listeners to the property cards
     }
@@ -486,52 +290,33 @@
       return matchSearch && matchType && matchPrice && matchBeds;
     }
 
-    // Contact owner function
-    function contactOwner(contact) {
-      if (contact.startsWith('http')) {
-        window.open(contact, '_blank');
-      } else {
-        window.open(`tel:${contact}`, '_self');
-      }
-    }
-
-    // View details function
-    function viewDetails(propertyData) {
-      try {
-        const property = JSON.parse(propertyData);
-        alert(`Property Details:\n\nName: ${property.houseName}\nLocation: ${property.location}\nPrice: ₹${property.price}/Month\nBeds: ${property.beds}\nContact: ${property.contact}`);
-      } catch (error) {
-        console.error('Error viewing details:', error);
-      }
-    }
-
     // Event listeners for filters and search
     document.getElementById("searchBtn").addEventListener("click", () => {
       console.log("Search button clicked - applying filters");
-      renderProperties(allProperties);
+      renderProperties(allData);
     });
 
     // Make all filters apply instantly on change
     document.getElementById("propertyType").addEventListener("change", () => {
       console.log("Property type changed to:", document.getElementById("propertyType").value);
-      renderProperties(allProperties);
+      renderProperties(allData);
     });
 
     document.getElementById("priceRange").addEventListener("change", () => {
       console.log("Price range changed to:", document.getElementById("priceRange").value);
-      renderProperties(allProperties);
+      renderProperties(allData);
     });
 
     document.getElementById("beds").addEventListener("change", () => {
       console.log("Beds changed to:", document.getElementById("beds").value);
-      renderProperties(allProperties);
+      renderProperties(allData);
     });
 
     // Search on Enter key
     document.getElementById("searchInput").addEventListener("keypress", (event) => {
       if (event.key === "Enter") {
         console.log("Enter key pressed in search - applying filters");
-        renderProperties(allProperties);
+        renderProperties(allData);
       }
     });
     
@@ -612,3 +397,9 @@
 
 </body>
 </html>
+
+<!-- 
+         <input id="name" type="text" name="username" placeholder="Your Name" required />
+        <input id="email" type="email" name="useremail" placeholder="Your Email" required />
+        <textarea id="message" placeholder="Your Message" name="message" required></textarea> 
+ -->
