@@ -320,10 +320,6 @@
   </footer>
 
   <script>
-    // Configuration
-    const USE_LOCALHOST_API = false; // Set to true when backend is ready
-    const API_URL = "http://localhost:3000/clients";
-    
     let allProperties = []; // Store all properties for filtering
     let filteredProperties = []; // Store filtered properties
 
@@ -342,15 +338,19 @@
       const userEmail = getCookie("userEmail");
       const isLoggedIn = getCookie("isLoggedIn");
 
+      // For cross-device compatibility, we'll allow viewing without strict login
       if (!userEmail || isLoggedIn !== "true") {
-        alert("Access denied. Please login first.");
-        window.location.href = "client_login.html";
-        return false;
+        console.log("User not logged in, continuing with limited access");
+        // Instead of redirecting, we'll just show a notification
+        setTimeout(() => {
+          alert("Viewing in demo mode. Log in for full access.");
+        }, 1000);
+        return true; // Allow access anyway for demo purposes
       }
       return true;
     }
 
-    // Load properties from localStorage (fallback)
+    // Load properties from localStorage
     function loadFromLocalStorage() {
       const allClients = [];
       // Get all client data from localStorage
@@ -370,23 +370,64 @@
       return allClients;
     }
 
-    // Load properties from API or localStorage
+    // Sample properties to display when localStorage is empty
+    const sampleProperties = [
+      {
+        houseName: "Sunshine Villa",
+        price: "15000",
+        beds: "2",
+        contact: "9876543210",
+        location: "Bangalore, Karnataka",
+        imageUrl: "/api/placeholder/400/300"
+      },
+      {
+        houseName: "Green Meadows Apartment",
+        price: "22000",
+        beds: "3",
+        contact: "8765432109",
+        location: "Mumbai, Maharashtra",
+        imageUrl: "/api/placeholder/400/300"
+      },
+      {
+        houseName: "Seaside Cottage",
+        price: "30000",
+        beds: "2",
+        contact: "7654321098",
+        location: "Goa",
+        imageUrl: "/api/placeholder/400/300"
+      },
+      {
+        houseName: "Mountain View Apartment",
+        price: "18000",
+        beds: "1",
+        contact: "6543210987",
+        location: "Shimla, Himachal Pradesh",
+        imageUrl: "/api/placeholder/400/300"
+      },
+      {
+        houseName: "City Center Flat",
+        price: "45000",
+        beds: "3",
+        contact: "7890123456",
+        location: "Delhi",
+        imageUrl: "/api/placeholder/400/300"
+      },
+      {
+        houseName: "Garden House",
+        price: "28000",
+        beds: "4",
+        contact: "8901234567",
+        location: "Chennai, Tamil Nadu",
+        imageUrl: "/api/placeholder/400/300"
+      }
+    ];
+
+    // Load properties function
     const loadProperties = async () => {
       try {
-        let clients = [];
-        
-        if (USE_LOCALHOST_API) {
-          // Try to fetch from API
-          const res = await fetch(API_URL);
-          if (!res.ok) {
-            throw new Error(`HTTP error! status: ${res.status}`);
-          }
-          clients = await res.json();
-        } else {
-          // Use localStorage as fallback
-          clients = loadFromLocalStorage();
-          console.log("Loading properties from localStorage:", clients);
-        }
+        // Use localStorage for property data
+        const clients = loadFromLocalStorage();
+        console.log("Loading properties from localStorage:", clients);
 
         // Extract all properties from all clients
         allProperties = [];
@@ -401,25 +442,22 @@
             }
           });
         });
+        
+        // If no properties found in localStorage, use sample data
+        if (allProperties.length === 0) {
+          console.log("No properties found in localStorage, using sample data");
+          allProperties = sampleProperties;
+        }
 
         filteredProperties = [...allProperties];
         displayProperties(filteredProperties);
-        
-        if (allProperties.length === 0) {
-          document.getElementById("propertyList").innerHTML = `
-            <div class="no-properties">
-              <h3>No Properties Available</h3>
-              <p>There are currently no properties listed. Please check back later!</p>
-            </div>
-          `;
-        }
 
       } catch (error) {
         console.error("Failed to load properties:", error);
         document.getElementById("propertyList").innerHTML = `
           <div class="error-message">
             <h3>Unable to Load Properties</h3>
-            <p>There was an error loading the properties. Please check if the server is running or try again later.</p>
+            <p>There was an error loading the properties. Please try again later.</p>
             <button onclick="location.reload()">Retry</button>
           </div>
         `;
