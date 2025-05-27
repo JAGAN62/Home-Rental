@@ -12,7 +12,7 @@
 <!-- Navigation -->
   <nav>
     <div class="logo">
-      <img title="Home" onclick="window.open('new_ui.html')" src="https://img.freepik.com/premium-psd/modern-house-transparency-background-psd_693425-20565.jpg" alt="Logo" />
+      <img title="Home" onclick="window.open('index.html')" src="https://img.freepik.com/premium-psd/modern-house-transparency-background-psd_693425-20565.jpg" alt="Logo" />
       House Rental
     </div>
 
@@ -81,7 +81,7 @@
 </div>
 
 <script>
-  const url = "http://localhost:8000/client_data";
+  const url = "http://localhost:8080/client_data";
   const loginBtn = document.getElementById("login");
   const forgotPwdLink = document.getElementById("forgot-pwd-link");
   const forgotPwdModal = document.getElementById("forgot-pwd-modal");
@@ -112,7 +112,7 @@
         setCookie("isLoggedIn", "true", 1);
         setCookie("userEmail", email, 1);
         setCookie("userId", user.id, 1);
-        window.location.href = "new_ui.html";
+        window.location.href = "index.html"
       } else {
         alertBox.textContent = "Invalid email or password.";
       }

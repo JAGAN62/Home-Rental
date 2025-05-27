@@ -6,8 +6,6 @@
   <title>Rent Out Dashboard</title>
   <link rel="stylesheet" href="Host.css" type="text/css">
   <link rel="stylesheet" href="scrollBar.css">
-  <!-- Cloudinary Upload Widget -->
-  <script src="https://upload-widget.cloudinary.com/global/all.js" type="text/javascript"></script>
 </head>
 <body>
   <!-- Loading animation -->
@@ -61,14 +59,7 @@
         <input type="number" id="price" class="fancy-input"placeholder="Price">
         <input type="text" id="contact" class="fancy-input"placeholder="Contact Number">
         <input type="number" id="beds" class="fancy-input"placeholder="No. of Beds" min="1">
-        
-        <!-- Cloudinary Upload Button -->
-        <div class="image-upload-section">
-          <button type="button" id="upload-widget-btn" class="upload-btn">Upload Image</button>
-          <div id="image-preview" class="image-preview"></div>
-          <input type="hidden" id="image-url" />
-        </div>
-        
+        <input type="file" id="image-file" accept="image/*">
         <button class="submit-btn" onclick="updateRentout()">Submit</button>
       </div>
     </div>
@@ -78,19 +69,9 @@
   <div id="cards-container"></div>
 
   <script>
-    // Cloudinary Configuration
-    const CLOUDINARY_CONFIG = {
-      cloudName: 'dya2d6lsz', // Replace with your Cloudinary cloud name
-      uploadPreset: 'rental_preset' // Replace with your unsigned upload preset
-    
-    };
-
-    // Toggle between localStorage and API
-    const USE_LOCALHOST_API = false; // Set to true when your backend is ready
-    const baseUrl = "http://localhost:3000/clients";
+    const baseUrl = "http://localhost:8080/clients";
     let userId = "";
     let editIndex = null;
-    let currentImageUrl = "";
   
     function getUserIdFromCookie() {
       const match = document.cookie.match(/(^| )userId=([^;]+)/);
@@ -101,7 +82,7 @@
       userId = getUserIdFromCookie();
       if (!userId) {
         alert("Session expired. Please login again.");
-        window.location.href = "host_login.html";
+        window.location.href = "ad_rentout.html";
       }
     }
   
@@ -112,67 +93,6 @@
         document.cookie = `userId=${uid}; path=/; max-age=${7 * 24 * 60 * 60}`;
       }
     }
-
-    // Initialize Cloudinary Upload Widget
-    function initCloudinaryWidget() {
-      const uploadWidget = cloudinary.createUploadWidget({
-        cloudName: CLOUDINARY_CONFIG.cloudName,
-        uploadPreset: CLOUDINARY_CONFIG.uploadPreset,
-        folder: 'house-rentals', // Optional: organize uploads in a folder
-        multiple: false,
-        cropping: true,
-        croppingAspectRatio: 1.5,
-        resourceType: 'image',
-        clientAllowedFormats: ['jpg', 'jpeg', 'png', 'gif', 'webp'],
-        maxFileSize: 10000000, // 10MB max
-        sources: ['local', 'url', 'camera'],
-        styles: {
-          palette: {
-            window: "#FFFFFF",
-            windowBorder: "#90A0B3",
-            tabIcon: "#0078FF",
-            menuIcons: "#5A616A",
-            textDark: "#000000",
-            textLight: "#FFFFFF",
-            link: "#0078FF",
-            action: "#FF620C",
-            inactiveTabIcon: "#0E2F5A",
-            error: "#F44235",
-            inProgress: "#0078FF",
-            complete: "#20B832",
-            sourceBg: "#E4EBF1"
-          }
-        }
-      }, (error, result) => {
-        if (!error && result && result.event === "success") {
-          currentImageUrl = result.info.secure_url;
-          document.getElementById('image-url').value = currentImageUrl;
-          displayImagePreview(currentImageUrl);
-          console.log("Image uploaded successfully:", result.info);
-        } else if (error) {
-          console.error("Upload error:", error);
-          alert("Failed to upload image. Please try again.");
-        }
-      });
-
-      document.getElementById('upload-widget-btn').addEventListener('click', () => {
-        uploadWidget.open();
-      });
-    }
-
-    function displayImagePreview(imageUrl) {
-      const previewContainer = document.getElementById('image-preview');
-      previewContainer.innerHTML = `
-        <img src="${imageUrl}" alt="Preview" style="max-width: 200px; max-height: 150px; border-radius: 8px; margin-top: 10px;">
-        <button type="button" onclick="removeImage()" style="margin-left: 10px; padding: 5px 10px; background: #ff4444; color: white; border: none; border-radius: 4px; cursor: pointer;">Remove</button>
-      `;
-    }
-
-    function removeImage() {
-      currentImageUrl = "";
-      document.getElementById('image-url').value = "";
-      document.getElementById('image-preview').innerHTML = "";
-    }
   
     async function fetchClientData() {
       userId = getUserIdFromCookie();
@@ -180,28 +100,9 @@
         console.warn("No userId found in cookie.");
         return null;
       }
-
-      if (!USE_LOCALHOST_API) {
-        // Use localStorage for testing
-        const clientData = localStorage.getItem(`client_${userId}`);
-        if (clientData) {
-          return JSON.parse(clientData);
-        } else {
-          // Create default client data
-          const defaultClient = {
-            id: userId,
-            rentouts: []
-          };
-          localStorage.setItem(`client_${userId}`, JSON.stringify(defaultClient));
-          return defaultClient;
-        }
-      }
   
       try {
         const res = await fetch(`${baseUrl}?id=${userId}`);
-        if (!res.ok) {
-          throw new Error(`HTTP error! status: ${res.status}`);
-        }
         const data = await res.json();
         if (data.length === 0) {
           console.warn("No client data found for userId:", userId);
@@ -210,7 +111,6 @@
         return data[0];
       } catch (error) {
         console.error("Error fetching client data:", error);
-        alert("Unable to connect to server. Please make sure the backend is running on port 3000.");
         return null;
       }
     }
@@ -229,7 +129,7 @@
         const card = document.createElement("div");
         card.className = "preview";
         card.innerHTML = `
-          <img src="${rentout.imageUrl || '/api/placeholder/300/200'}" alt="House Image" onerror="this.src='/api/placeholder/300/200'"/>
+          <img src="${rentout.imageUrl}" alt="House Image"/>
           <div class="property-info">
             <h3>${rentout.houseName}</h3>
             <p><strong>Location:</strong> ${rentout.location}</p>
@@ -252,16 +152,10 @@
       const price = document.getElementById("price").value.trim();
       const contact = document.getElementById("contact").value.trim();
       const beds = document.getElementById("beds").value.trim();
-      const imageUrl = document.getElementById("image-url").value;
+      const imageInput = document.getElementById("image-file");
   
       if (!houseName || !location || !price || !contact || !beds || parseInt(beds) < 1) {
         alert("Please fill all fields correctly (beds ≥ 1).");
-        return;
-      }
-
-      // Check if image is required for new entries
-      if (editIndex === null && !imageUrl) {
-        alert("Please upload an image for the property.");
         return;
       }
   
@@ -269,50 +163,40 @@
       if (!client) return;
   
       if (!Array.isArray(client.rentouts)) client.rentouts = [];
-
-      const rentout = {
-        houseName, location, price, contact, beds,
-        imageUrl: imageUrl || (editIndex !== null ? client.rentouts[editIndex].imageUrl : "")
-      };
-
-      if (editIndex !== null) {
-        client.rentouts[editIndex] = rentout;
-        editIndex = null;
-      } else {
-        client.rentouts.push(rentout);
-      }
-
-      if (!USE_LOCALHOST_API) {
-        // Use localStorage for testing
-        localStorage.setItem(`client_${userId}`, JSON.stringify(client));
-        
-        // Close modal after submission
-        document.getElementById('modalOverlay').classList.remove('active');
-        document.body.classList.remove('dimmed');
-
-        clearForm();
-        displayRentout();
-        alert("Property saved successfully!");
-        return;
-      }
-
-      try {
+  
+      const handleSave = async (imageUrl = null) => {
+        const rentout = {
+          houseName, location, price, contact, beds,
+          imageUrl: imageUrl || (editIndex !== null ? client.rentouts[editIndex].imageUrl : "")
+        };
+  
+        if (editIndex !== null) {
+          client.rentouts[editIndex] = rentout;
+          editIndex = null;
+        } else {
+          client.rentouts.push(rentout);
+        }
+  
         await fetch(`${baseUrl}/${client.id}`, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(client)
         });
-
+  
         // Close modal after submission
         document.getElementById('modalOverlay').classList.remove('active');
         document.body.classList.remove('dimmed');
-
+  
         clearForm();
         displayRentout();
-        alert("Property saved successfully!");
-      } catch (error) {
-        console.error("Error saving property:", error);
-        alert("Failed to save property. Please check if the backend server is running.");
+      };
+  
+      if (imageInput.files.length > 0) {
+        const reader = new FileReader();
+        reader.onloadend = () => handleSave(reader.result);
+        reader.readAsDataURL(imageInput.files[0]);
+      } else {
+        handleSave();
       }
     }
   
@@ -322,9 +206,7 @@
       document.getElementById("price").value = "";
       document.getElementById("contact").value = "";
       document.getElementById("beds").value = "";
-      document.getElementById("image-url").value = "";
-      document.getElementById("image-preview").innerHTML = "";
-      currentImageUrl = "";
+      document.getElementById("image-file").value = "";
       document.querySelector(".submit-btn").textContent = "Submit";
       document.getElementById('heading').innerHTML = '📋 Add Rent Out';
     }
@@ -339,14 +221,6 @@
       document.getElementById("price").value = rentout.price;
       document.getElementById("contact").value = rentout.contact;
       document.getElementById("beds").value = rentout.beds;
-      
-      // Set current image
-      if (rentout.imageUrl) {
-        currentImageUrl = rentout.imageUrl;
-        document.getElementById("image-url").value = rentout.imageUrl;
-        displayImagePreview(rentout.imageUrl);
-      }
-      
       editIndex = index;
       document.getElementById('heading').innerHTML = '📋 Edit Rent Out';
       document.querySelector(".submit-btn").textContent = "Update";
@@ -357,42 +231,18 @@
     }
   
     async function deleteRentout(index) {
-      if (!confirm("Are you sure you want to delete this property?")) {
-        return;
-      }
-
       const client = await fetchClientData();
       if (!client || !Array.isArray(client.rentouts)) return;
-
-      // Optional: Delete image from Cloudinary
-      const deletedRentout = client.rentouts[index];
-      if (deletedRentout.imageUrl && deletedRentout.imageUrl.includes('cloudinary.com')) {
-        // Extract public_id from Cloudinary URL for deletion (if needed)
-        console.log("Consider deleting image from Cloudinary:", deletedRentout.imageUrl);
-      }
   
       client.rentouts.splice(index, 1);
-
-      if (!USE_LOCALHOST_API) {
-        // Use localStorage for testing
-        localStorage.setItem(`client_${userId}`, JSON.stringify(client));
-        displayRentout();
-        alert("Property deleted successfully!");
-        return;
-      }
   
-      try {
-        await fetch(`${baseUrl}/${client.id}`, {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(client)
-        });
-        displayRentout();
-        alert("Property deleted successfully!");
-      } catch (error) {
-        console.error("Error deleting property:", error);
-        alert("Failed to delete property. Please check if the backend server is running.");
-      }
+      await fetch(`${baseUrl}/${client.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(client)
+      });
+  
+      displayRentout();
     }
   
     function logout() {
@@ -402,9 +252,6 @@
   
     // Modal functionality
     document.addEventListener('DOMContentLoaded', function() {
-      // Initialize Cloudinary widget
-      initCloudinaryWidget();
-      
       // Show loading animation for 1 second
       setTimeout(function() {
         document.querySelector('.loader-container').style.display = 'none';
@@ -450,49 +297,6 @@
     this.classList.toggle('active');
   });
 </script>
-
-<style>
-  /* Additional styles for Cloudinary integration */
-  .image-upload-section {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    grid-column: span 2;
-  }
-
-  .upload-btn {
-    padding: 10px 20px;
-    background: #0078FF;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 14px;
-    transition: background 0.3s ease;
-  }
-
-  .upload-btn:hover {
-    background: #0056CC;
-  }
-
-  .image-preview {
-    margin-top: 10px;
-    display: flex;
-    align-items: center;
-  }
-
-  .image-preview img {
-    border: 2px solid #ddd;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  }
-
-  /* Responsive adjustments */
-  @media (max-width: 768px) {
-    .image-upload-section {
-      grid-column: span 1;
-    }
-  }
-</style>
   
 </body>
 </html>
