@@ -6,48 +6,16 @@
       background-color: #f4f4f4;
        overflow-x: hidden;
       overscroll-behavior: none;
-      overflow-y: auto;
+      scroll-behavior: auto;
+      overflow-y:hidden;
+      background: 
+        linear-gradient(135deg, rgba(102, 126, 234, 0.3) 0%, rgba(118, 75, 162, 0.3) 25%, rgba(240, 147, 251, 0.3) 50%, rgba(245, 87, 108, 0.3) 75%, rgba(79, 172, 254, 0.3) 100%),
+        url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80');
+      background-attachment: fixed;
+     background-repeat: no-repeat;
+     
     }
-/* 
-    nav {
-      background-color: #1e293b;
-      color: white;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0px 10px;
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-    }
-    nav .logo {
-      display: flex;
-      align-items: center;
-      font-size: 1.5rem;
-      font-weight: bold;
-    }
-    nav .logo img {
-      width: 40px;
-      height: 40px;
-      margin-right: 10px;
-      border-radius: 50%;
-    }
-    nav ul {
-      display: flex;
-      gap: 20px;
-      list-style: none;
-      align-items: center;
-    }
-    nav ul li a {
-      color: white;
-      text-decoration: none;
-      font-weight: 500;
-      padding: 8px 12px;
-      border-radius: 6px;
-      transition: background 0.3s;
-    }
-    /* nav ul li a:hover { background: #334155; } */
-    .login-btn {
+    /* .login-btn {
       background-color: #0ea5e9;
       color: white;
       border: none;
@@ -56,7 +24,7 @@
       cursor: pointer;
       transition: background 0.3s;
     }
-    .login-btn:hover { background-color: #0284c7; } */
+    .login-btn:hover { background-color: #0284c7; }  */
 
     .fancy-input {
   padding: 14px 12px;
@@ -88,7 +56,10 @@
 }
 
 nav {
-      background-color: #1e293b;
+      z-index: 1000;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
       color: white;
       display: flex;
       justify-content: space-between;
@@ -125,11 +96,43 @@ nav {
       color: white;
       text-decoration: none;
       font-weight: 500;
+      position: relative;
       transition: color 0.3s;
     }
 
     .nav-links a:hover {
-      color: #38bdf8;
+      color: rgb(252, 249, 252);
+    }
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: #f6f4f6d4;
+      transition: width 0.3s ease;
+    }
+
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+/* 
+    .nav-links button {
+      background: rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 25px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+    } */
+
+    .nav-links button:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: translateY(-2px);
+      color:rgb(248, 23, 60);
     }
 
     .hamburger {
@@ -189,21 +192,6 @@ nav {
       left: 0;
     }
 
-.nav-links button {
-  background-color: #0ea5e9;
-  color: white;
-  border: none;
-  padding: 8px 15px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: 500;
-  transition: background 0.3s, transform 0.2s;
-}
-
-.nav-links button:hover {
-  background-color: #0284c7;
-  transform: scale(1.05);
-}
 
     .main-content {
       display: flex;
@@ -211,15 +199,45 @@ nav {
       align-items: center;
       height: calc(100vh - 70px);
       padding-top: 20px;
+      
     }
-
+    
     .container {
-      background: #fff;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 20px;
       padding: 20px;
       border-radius: 10px;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
       text-align: center;
       width: 300px;
+    }
+
+
+     .container input[type="email"],
+    .container input[type="password"] {
+      width: 100%;
+      /* padding: 1rem; */
+      margin-bottom: 1.5rem;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 10px;
+      color: rgba(250, 64, 185, 0.864);
+      font-size: 1rem;
+      backdrop-filter: blur(20px);
+      transition: all 0.3s ease;
+    }
+    .container input[type="email"]:focus,
+    .container input[type="password"]:focus {
+      outline: none;
+      border-color: rgba(255, 255, 255, 0.741);
+      background: rgba(255, 255, 255, 0.15);
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+    }
+
+    .container input::placeholder {
+      color: rgba(255, 255, 255, 0.7);
     }
 
     input, #login {
@@ -230,16 +248,27 @@ nav {
       border-radius: 5px;
     }
 
-    #login {
-      background-color: #007bff;
+   #login {
+      width: 100%;
+      /* padding: 1rem; */
+      background: rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 25px;
       color: white;
-      border: none;
+      font-size: 1.1rem;
+      font-weight: 500;
       cursor: pointer;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+      margin-bottom: 1.5rem;
     }
 
-    #login:hover {
-      background-color: #0056b3;
+      #login:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
     }
+
 
     .alert {
       font-size: 14px;
@@ -253,7 +282,7 @@ nav {
     }
 
     .switch a {
-      color: #007bff;
+      color: #1100ff;
       text-decoration: none;
     }
 
@@ -278,8 +307,6 @@ nav {
       display: flex;
       align-items: center;
       justify-content: center;
-      background-color: white;
-      color: #444;
       width: 100%;
       border: 1px solid #ddd;
       border-radius: 5px;
@@ -288,7 +315,6 @@ nav {
       cursor: pointer;
       font-weight: 500;
     }
-
     .google-btn img {
       height: 20px;
       margin-right: 10px;
@@ -301,7 +327,7 @@ nav {
     }
 
     .forgot-password a {
-      color: #007bff;
+      color: #451af3;
       text-decoration: none;
     }
 

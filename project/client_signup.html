@@ -20,7 +20,6 @@
       <a href="Host.html">Rent out users</a>
       <a href="properties.html">Properties</a>
       <a href="about.html">About</a>
-      <!-- <button onclick="window.open('host_login.html')">Logout</button> -->
     </div>
 
     <div class="hamburger" id="hamburger">
@@ -43,19 +42,19 @@
   <div class="container">
     <h2>Sign Up</h2>
     <form id="signup-form">
-      <input type="text" id="user-name" placeholder="User Name" required>
-      <input type="email" id="signup-email" placeholder="Email" required>
-      <input type="password" id="signup-password" placeholder="Password" required>
+      <input type="text" id="user-name" placeholder="User Name" autofocus/>
+      <input type="email" id="signup-email" placeholder="Email" />
+      <input type="password" id="signup-password" placeholder="Password" />
       <button type="submit" id="signup-btn">Sign Up</button>
     </form>
-    <p>Already have an account? <a href="client_login.html">Login</a></p>
+    <p style="color:white">Already have an account? <a href="client_login.html">Login</a></p>
     <div id="alert" class="alert"></div>
   </div>
 </div>
 
 <script>
 // Server URL
-const url = "http://localhost:8080/client_data";
+const url = "http://localhost:3000/client_data";
 
 // DOM elements
 const signupForm = document.getElementById("signup-form");

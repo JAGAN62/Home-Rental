@@ -3,67 +3,399 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Contact Us | House Rental</title>
-  <link rel="stylesheet" href="navstyle.css">
-  <link rel="stylesheet" href="contact.css">
+  <title>Contact Us - Premium Home Rentals</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      overflow-x: hidden;
+      color: white;
+      overflow-x: hidden;
+      overflow-y:hidden;
+      overscroll-behavior:none;
+    }
+
+    .background {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url('https://images.unsplash.com/photo-1564013799919-ab600027ffc6?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80') center/cover no-repeat;
+      z-index: -2;
+    }
+
+    .background::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, rgba(102, 126, 234, 0.7), rgba(118, 75, 162, 0.7));
+      z-index: 1;
+    }
+
+    nav {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 30px;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+
+    .logo img {
+      width: 40px;
+      height: 40px;
+      object-fit: cover;
+      margin-right: 10px;
+      cursor: pointer;
+      border-radius: 50%;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+    }
+
+    .nav-links a {
+      color: white;
+      text-decoration: none;
+      font-weight: 500;
+      position: relative;
+      transition: color 0.3s;
+    }
+
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: #02cafcf5;
+      /* transition: width 0.3s ease; */
+    }
+
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      cursor: pointer;
+      gap: 5px;
+    }
+
+    .hamburger div {
+      width: 25px;
+      height: 3px;
+      background: white;
+    }
+
+    .contact-container {
+      max-width: 1200px;
+      margin: auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      padding: 2rem;
+      padding-top: 100px;
+    }
+
+    .contact-info h1 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      background: linear-gradient(45deg, #fff, #f0f0f0);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .contact-info p {
+      font-size: 1.1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .contact-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      background: rgba(255, 255, 255, 0.086);
+      backdrop-filter: blur(10px);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.2);
+    }
+
+    .contact-icon {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+      padding: 10px;
+      font-size: 1.3rem;
+    }
+
+    .communication-icons {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .comm-icon {
+      width: 40px;
+      height: 40px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      color: white;
+      cursor: pointer;
+      transition: 0.3s;
+      text-decoration: none;
+    }
+
+    .comm-icon:hover {
+      background: rgba(255, 255, 255, 0.4);
+      transform: scale(1.1);
+    }
+
+    .contact-form {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 2rem;
+      border-radius: 20px;
+      box-shadow: 0 10px 40px rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(15px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .contact-form:hover {
+      /* transform: translateY(-3px); */
+      box-shadow: 0 20px 50px rgba(255, 255, 255, 0.2);
+    }
+
+    .contact-form h2 {
+      margin-bottom: 1.5rem;
+      color: white;
+      text-align: center;
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 0.9rem;
+      border: none;
+      border-radius: 12px;
+      font-size: 1rem;
+      color: #fff;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.2);
+      transition: all 0.3s ease;
+    }
+
+    .form-group input::placeholder,
+    .form-group textarea::placeholder {
+      color: #eee;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+      outline: none;
+      background: rgba(255, 255, 255, 0.289);
+      box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.616);
+      /* transform: translateY(-2px); */
+    }
+
+    .submit-btn {
+      background: linear-gradient(45deg, #00bcd4, #3f51b5);
+      color: white;
+      padding: 0.9rem;
+      border: none;
+      border-radius: 12px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.3s ease, transform 0.3s ease;
+      width: 100%;
+    }
+
+    .submit-btn:hover {
+      background: linear-gradient(45deg, #03a9f4, #5c6bc0);
+      transform: scale(1.03);
+    }
+
+    .comm-icon:hover {
+  background: rgba(255, 255, 255, 0.4);
+  transform: scale(1.2);
+}
+.comm-icon i {
+  font-size: 1.2rem;
+  color: white;
+}
+
+    @media (max-width: 768px) {
+      .contact-container {
+        grid-template-columns: 1fr;
+      }
+
+      .hamburger {
+        display: flex;
+      }
+
+      .nav-links {
+        display: none;
+        flex-direction: column;
+        background: rgba(255, 255, 255, 0.95);
+        position: absolute;
+        top: 60px;
+        right: 20px;
+        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+        padding: 1rem;
+        border-radius: 10px;
+      }
+
+      .nav-links.active {
+        display: flex;
+      }
+
+      .nav-links a {
+        color: #333;
+        margin-bottom: 1rem;
+      }
+    }
+  </style>
 </head>
 <body>
+  <div class="background"></div>
 
   <nav>
     <div class="logo">
-      <img src="https://i.pinimg.com/736x/91/49/4b/91494bc52579dba0ab3428d063fe64ee.jpg" alt="Logo" />
+      <img src="https://img.freepik.com/premium-psd/modern-house-transparency-background-psd_693425-20565.jpg" alt="Logo" onclick="window.open('index.html')" />
       House Rental
     </div>
-    <ul>
-      <li><a href="new_ui.html" class="active">Home</a></li>
-      <li><a href="properties.html">Properties</a></li>
-      <!-- <li><a href="about.html">About</a></li> -->
-      <li><a href="contact.html">Contact</a></li>
-      <li><button id="login-btn" class="login-btn">Login</button></li>
-    </ul>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="Host.html">Rent out users</a>
+      <a href="properties.html">Properties</a>
+      <a href="about.html">About</a>
+    </div>
+    <div class="hamburger" id="hamburger">
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
   </nav>
 
-  <header>
-    <h1>Get In Touch</h1>
-    <p>We're here to help you find your perfect home.</p>
-  </header>
+  <main>
+    <div class="contact-container">
+      <div class="contact-info">
+        <h1>Get in Touch</h1>
+        <p>Ready to find your perfect home rental? We're here to help you every step of the way.</p>
 
-  <section class="contact-section">
-    <h2>Contact Us</h2>
-    <form id="contactForm">
-      <input type="text" id="name" placeholder="Your Name" required />
-      <input type="email" id="email" placeholder="Your Email" required />
-      <textarea id="message" rows="5" placeholder="Your Message" required></textarea>
-      <button type="submit">Send Message</button>
-      <div class="success-message" id="successMessage">
-        ✅ Message sent successfully!
+        <div class="contact-item">
+          <div class="contact-icon">📧</div>
+          <div>
+            <h3>Email</h3>
+            <p>jagan.mamanduru@gmail.com</p>
+          </div>
+        </div>
+
+        <div class="contact-item">
+          <div class="contact-icon">📞</div>
+          <div>
+            <h3>Phone</h3>
+            <p>+91 88978-74514</p>
+          </div>
+        </div>
+
+        <div class="contact-item">
+          <div class="contact-icon">📍</div>
+          <div>
+            <h3>Address</h3>
+            <p>103 Aakuthota Street, Naidupet,dhra pradesh</p>
+          </div>
+        </div>
+
+    <div class="communication-icons">
+  <a href="tel:+918897874514" class="comm-icon" title="Call us"><i class="fas fa-phone"></i></a>
+  <a href="https://wa.me/+918897874514?text=Hii!, my self Jagan...." title="Chat on whatsapp" class="comm-icon"><i class="fab fa-whatsapp"></i></a>       
+  <a href="mailto:jagan.mamanduru@gmail.com" class="comm-icon" title="Email us"><i class="fas fa-envelope"></i></a>
+  <a href="https://www.facebook.com/jagan.mamanduru" class="comm-icon" target="_blank" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+  <a href="https://www.instagram.com/jagan_4321" class="comm-icon" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
+</div>
+
+
       </div>
-    </form>
-  </section>
 
-  <footer>
-    <p>&copy; 2024 House Rental. All rights reserved.</p>
-  </footer>
+      <form class="contact-form">
+        <h2>Send us a Message</h2>
+        <div class="form-group">
+          <input type="text" name="name" placeholder="Full Name" required autofocus/>
+        </div>
+        <div class="form-group">
+          <input type="email" name="email" placeholder="Email Address" required>
+        </div>
+        <div class="form-group">
+          <input type="tel" name="phone" placeholder="Phone Number">
+        </div>
+        <div class="form-group">
+          <input type="text" name="subject" placeholder="Subject" required>
+        </div>
+        <div class="form-group">
+          <textarea name="message" placeholder="Your message..." required></textarea>
+        </div>
+        <p id="success-message" style="display:none; color:lime; text-align:center; margin: 10px;">Message sent successfully!</p>
+        <button type="submit" class="submit-btn">Send Message</button>
+      </form>
+    </div>
+  </main>
 
   <script>
-    document.getElementById("contactForm").addEventListener("submit", function(e) {
-      e.preventDefault();
-      
-      // You can replace this with actual backend call (e.g. Firebase or Formspree)
-      const name = document.getElementById("name").value.trim();
-      const email = document.getElementById("email").value.trim();
-      const message = document.getElementById("message").value.trim();
+    const hamburger = document.getElementById('hamburger');
+  const navLinks = document.querySelector('.nav-links');
 
-      if (name && email && message) {
-        document.getElementById("successMessage").style.display = "block";
-        this.reset();
-        setTimeout(() => {
-          document.getElementById("successMessage").style.display = "none";
-        }, 4000);
-      }
-    });
+  hamburger.addEventListener('click', () => {
+    navLinks.classList.toggle('active');
+  });
+
+  // Handle form message show/hide
+  const form = document.querySelector('.contact-form');
+  const successMessage = document.getElementById('success-message');
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault(); // Prevent actual submission
+    successMessage.style.display = 'block';
+    setTimeout(() => {
+      successMessage.style.display = 'none';
+    }, 3000);
+    form.reset(); // Optional: clear form inputs
+  });
   </script>
-
 </body>
 </html>

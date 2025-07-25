@@ -4,30 +4,613 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Rent Out Dashboard</title>
-  <link rel="stylesheet" href="Host.css" type="text/css">
-  <link rel="stylesheet" href="scrollBar.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Arial', sans-serif;
+      min-height: 100vh;
+      color: white;
+      overflow-x: hidden;
+      overflow-y: auto;
+      overscroll-behavior:none;
+  background:
+    linear-gradient(to right, rgba(0,0,0,0.5), rgba(0,0,0,0.6)),
+    url('https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=1950&q=80') no-repeat center center / cover;
+
+    }
+
+    /* Loading Animation */
+    .loader-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.9);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+
+    .loader {
+      width: 60px;
+      height: 60px;
+      border: 4px solid rgba(255,255,255,0.3);
+      border-top: 4px solid #ff6b6b;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .loading-text {
+      margin-top: 20px;
+      font-size: 18px;
+      color: white;
+    }
+
+    /* Navigation */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 5%;
+      background: rgba(255,255,255,0.1);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255,255,255,0.2);
+      z-index: 1000;
+      transition: all 0.3s ease;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 24px;
+      font-weight: bold;
+      color: white;
+    }
+
+    .logo img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+
+    .logo img:hover {
+      transform: scale(1.1);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 30px;
+    }
+
+    .nav-links a {
+      color: white;
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .nav-links a:hover {
+      color: #f8f5f5;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: #f6f5f5;
+      transition: width 0.3s ease;
+    }
+
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+
+   /* Replace the existing .nav-links button style with this */
+.nav-links button {
+  background: rgba(255,255,255,0.2);
+  border: 1px solid rgba(255,255,255,0.3);
+  color: white;
+  padding: 10px 20px;
+  border-radius: 25px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  position: relative;
+}
+
+.nav-links button:hover {
+  background: rgba(255,107,107,0.3);
+  border-color: #ff6b6b;
+  transform: translateY(-2px);
+}
+
+/* New styles for user profile button when logged in */
+/*
+.nav-links .user-profile-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255,255,255,0.2);
+  padding: 8px 20px;
+  border-radius: 25px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.3);
+  position: relative;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.nav-links .user-profile-btn:hover {
+  background: rgba(255,107,107,0.2);
+  border-color: #ff6b6b;
+  transform: translateY(-2px);
+}
+
+.nav-links .user-profile-btn .user-icon {
+  width: 30px;
+  height: 30px;
+  background: linear-gradient(45deg, #ff6b6b, #ffa500);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.nav-links .user-profile-btn .dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: rgba(255,255,255,0.1);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 10px;
+  padding: 10px;
+  margin-top: 10px;
+  min-width: 120px;
+  display: none;
+  z-index: 1002;
+}
+
+.nav-links .user-profile-btn:hover .dropdown,
+.nav-links .user-profile-btn.active-dropdown .dropdown {
+  display: block;
+}
+
+.nav-links .user-profile-btn .dropdown button {
+  background: none;
+  border: none;
+  color: white;
+  padding: 8px 16px;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  border-radius: 5px;
+  transition: background 0.3s ease;
+  font-size: 14px;
+}
+
+
+.nav-links .user-profile-btn .dropdown button:hover {
+  background: none;
+  transform: none;
+  cursor: default;
+}
+*/
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      cursor: pointer;
+      gap: 4px;
+    }
+
+    .hamburger div {
+      width: 25px;
+      height: 3px;
+      background: white;
+      border-radius: 2px;
+      transition: 0.3s;
+    }
+
+    .side-nav {
+      position: fixed;
+      top: 0;
+      right: -300px;
+      width: 300px;
+      height: 100vh;
+      background: rgba(0,0,0,0.9);
+      backdrop-filter: blur(20px);
+      transition: right 0.3s ease;
+      z-index: 999;
+      padding: 80px 30px 30px;
+    }
+
+    .side-nav.open {
+      right: 0;
+    }
+
+    .side-nav a {
+      display: block;
+      color: white;
+      text-decoration: none;
+      padding: 15px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      transition: color 0.3s ease;
+    }
+
+    .side-nav a:hover {
+      color: #ff6b6b;
+    }
+
+    /* Main Content */
+    .main-content {
+      margin-top: 100px;
+      padding: 20px 5%;
+    }
+
+    /* Add Rent Out Button */
+    .add-rentout-btn {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: linear-gradient(45deg, #ff6b6b, #ffa500);
+      color: white;
+      border: none;
+      padding: 18px 25px;
+      border-radius: 50px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 10px 30px rgba(255,107,107,0.3);
+      transition: all 0.3s ease;
+      z-index: 100;
+    }
+
+    .add-rentout-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 15px 40px rgba(255,107,107,0.4);
+    }
+
+    /* Modal Overlay */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(10px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1001;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .form-section {
+      background: rgba(255,255,255,0.1);
+      backdrop-filter: blur(25px);
+      border: 1px solid rgba(255,255,255,0.2);
+      padding: 40px;
+      border-radius: 20px;
+      max-width: 500px;
+      width: 90%;
+      position: relative;
+      transform: scale(0.8);
+      transition: transform 0.3s ease;
+    }
+
+    .modal-overlay.active .form-section {
+      transform: scale(1);
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      background: none;
+      border: none;
+      color: white;
+      font-size: 24px;
+      cursor: pointer;
+      transition: color 0.3s ease;
+    }
+
+    .close-btn:hover {
+      color: #ff6b6b;
+    }
+
+    .form-section h2 {
+      margin-bottom: 30px;
+      text-align: center;
+      color: white;
+      font-size: 28px;
+    }
+
+    .form-grid {
+      display: grid;
+      gap: 20px;
+    }
+
+    .fancy-input {
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.3);
+      color: white;
+      padding: 15px 20px;
+      border-radius: 15px;
+      font-size: 16px;
+      backdrop-filter: blur(10px);
+      transition: all 0.3s ease;
+    }
+
+    .fancy-input::placeholder {
+      color: rgba(255,255,255,0.7);
+    }
+
+    .fancy-input:focus {
+      outline: none;
+      border-color: #ff6b6b;
+      box-shadow: 0 0 20px rgba(255,107,107,0.3);
+      transform: translateY(-2px);
+    }
+
+    .fancy-input[type="file"] {
+      padding: 10px;
+      cursor: pointer;
+    }
+
+    .file-input-container {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .file-input-label {
+      background: rgba(255,255,255,0.1);
+      border: 2px dashed rgba(255,255,255,0.3);
+      color: white;
+      padding: 20px;
+      border-radius: 15px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+    }
+
+    .file-input-label:hover {
+      border-color: #ff6b6b;
+      background: rgba(255,107,107,0.1);
+    }
+
+    .file-input-label.has-file {
+      border-color: #4CAF50;
+      background: rgba(76,175,80,0.1);
+    }
+
+    .file-input-hidden {
+      display: none;
+    }
+
+    .file-preview {
+      max-width: 100%;
+      max-height: 150px;
+      border-radius: 10px;
+      margin-top: 10px;
+      object-fit: cover;
+    }
+
+    .file-input-text {
+      font-size: 16px;
+      font-weight: 500;
+    }
+
+    .file-input-hint {
+      font-size: 12px;
+      color: rgba(255,255,255,0.6);
+      margin-top: 5px;
+    }
+
+    .submit-btn {
+      background: linear-gradient(45deg, #ff6b6b, #ffa500);
+      color: white;
+      border: none;
+      padding: 15px 30px;
+      border-radius: 15px;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 10px;
+    }
+
+    .submit-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(255,107,107,0.3);
+    }
+
+    /* Cards Container */
+
+    #cards-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 2rem;
+      padding: 2rem;
+      flex: 1;
+      place-items: center;
+    }
+
+    .preview {
+      background: white;
+      color: black; /* Changed to black for readability */
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      width: 320px; /* card width */
+      height: 450px; /* card height */
+    }
+
+    .preview img {
+      width: 100%;
+      height: 200px; /* fixed image height */
+      object-fit: cover;
+    }
+
+    .preview-content {
+      padding: 1rem; /* Added padding here */
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      flex-grow: 1;
+      gap: 6px;
+    }
+
+    .preview-content h3 {
+      margin: 0 0 0.5rem 0;
+      font-size: 1.3rem;
+    }
+
+    .preview-content > p {
+      margin: 0.2rem 0;
+      font-size: 0.95rem;
+      color: #555; /* Changed to a darker grey for readability */
+    }
+
+    .actions {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-top: auto; /* this pushes buttons to bottom */
+      padding-bottom: 1rem;
+    }
+
+
+    .actions button {
+      margin-right: 0.5rem;
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 6px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .actions button:first-child {
+      background: #10b981;
+      padding:8px 25px;
+      color: white;
+    }
+
+    .actions button:first-child:hover {
+      background: #059669;
+    }
+
+    .actions button:last-child {
+      background: #ef4444;
+      color: white;
+    }
+
+    .actions button:last-child:hover {
+      background: #dc2626;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+      }
+
+      .hamburger {
+        display: flex;
+      }
+
+      .form-section {
+        margin: 20px;
+        padding: 30px 20px;
+      }
+
+      #cards-container {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+
+      .add-rentout-btn {
+        bottom: 20px;
+        right: 20px;
+        padding: 15px 20px;
+      }
+    }
+
+    /* Smooth scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: rgba(255,255,255,0.1);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255,107,107,0.6);
+      border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(255,107,107,0.8);
+    }
+  </style>
 </head>
 <body>
-  <!-- Loading animation -->
   <div class="loader-container">
     <div class="loader"></div>
     <div class="loading-text">Loading...</div>
   </div>
 
-  <!-- Navigation -->
   <nav>
     <div class="logo">
       <img title="Home" onclick="window.open('index.html')" src="https://img.freepik.com/premium-psd/modern-house-transparency-background-psd_693425-20565.jpg" alt="Logo" />
       House Rental
     </div>
 
-    <div class="nav-links">
-      <a href="index.html">Home</a>
-      <!-- <a href="Host.html">Rent out users</a> -->
-      <a href="properties.html">Properties</a>
-      <a href="about.html">About</a>
-      <button onclick="window.open('host_login.html')">Logout</button>
-    </div>
+    <div class="nav-links" id="navLinks">
+      </div>
 
     <div class="hamburger" id="hamburger">
       <div></div>
@@ -36,101 +619,227 @@
     </div>
   </nav>
 
-  <!-- Side Menu -->
   <div class="side-nav" id="sideNav">
-    <a href="index.html">Home</a>
-    <!-- <a href="Host.html">Rent out users</a> -->
-    <a href="properties.html">Properties</a>
-    <a href="about.html">About</a>
-  </div>
+    </div>
 
-  <!-- Add Rent Out Button -->
-  <button class="add-rentout-btn" id="openFormBtn">+ Add Rent Out</button>
+  <div class="main-content">
+    <button class="add-rentout-btn" id="openFormBtn">+ Add Rent Out</button>
 
-  <!-- Modal Overlay -->
-  <div class="modal-overlay" id="modalOverlay">
-    <!-- Form Section -->
-    <div class="form-section">
-      <button class="close-btn" id="closeFormBtn">✖</button>
-      <h2 id="heading" style="color:blue">📋 Add Rent Out</h2>
-      <div class="form-grid">
-        <input type="text" id="house-name" class="fancy-input" placeholder="House Name">
-        <input type="text" id="location" class="fancy-input"placeholder="Location">
-        <input type="number" id="price" class="fancy-input"placeholder="Price">
-        <input type="text" id="contact" class="fancy-input"placeholder="Contact Number">
-        <input type="number" id="beds" class="fancy-input"placeholder="No. of Beds" min="1">
-        <input type="file" id="image-file" accept="image/*">
-        <button class="submit-btn" onclick="updateRentout()">Submit</button>
+    <div class="modal-overlay" id="modalOverlay">
+      <div class="form-section">
+        <button class="close-btn" id="closeFormBtn">✖</button>
+        <h2 id="heading">📋 Add Rent Out</h2>
+        <div class="form-grid">
+          <input type="text" id="house-name" class="fancy-input" placeholder="House Name">
+          <input type="text" id="location" class="fancy-input" placeholder="Location">
+          <input type="number" id="price" class="fancy-input" placeholder="Price">
+          <input type="text" id="contact" class="fancy-input" placeholder="Contact Number">
+          <input type="number" id="beds" class="fancy-input" placeholder="No. of Beds" min="1">
+
+          <div class="file-input-container">
+            <label for="image-file" class="file-input-label" id="fileLabel">
+              <div class="file-input-text">📷 Upload House Image</div>
+              <div class="file-input-hint">Click to select a photo of your house/property</div>
+            </label>
+            <input type="file" id="image-file" class="file-input-hidden" accept="image/*">
+            <img id="imagePreview" class="file-preview" style="display: none;">
+          </div>
+
+          <button class="submit-btn" onclick="updateRentout()">Submit</button>
+        </div>
       </div>
     </div>
+
+    <div id="cards-container"></div>
   </div>
 
-  <!-- Cards Container -->
-  <div id="cards-container"></div>
-
   <script>
-    const baseUrl = "http://localhost:8080/clients";
+    const baseUrl = "http://localhost:3000/clients";
     let userId = "";
     let editIndex = null;
-  
-    function getUserIdFromCookie() {
-      const match = document.cookie.match(/(^| )userId=([^;]+)/);
-      return match ? match[2] : null;
+    let currentUser = null; // To store the fetched client data
+
+    // --- Cookie Management Functions ---
+    function getCookie(name) {
+      const nameEQ = name + "=";
+      const ca = document.cookie.split(';');
+      for(let i=0; i < ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+        if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+      }
+      return null;
     }
-  
+
+    function setCookie(name, value, days) {
+      let expires = "";
+      if (days) {
+        const date = new Date();
+        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+        expires = "; expires=" + date.toUTCString();
+      }
+      document.cookie = name + "=" + (value || "") + expires + "; path=/";
+    }
+
+    function eraseCookie(name) {
+      document.cookie = name + '=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+    }
+    // --- End Cookie Management Functions ---
+
+
     function checkLoginStatus() {
-      userId = getUserIdFromCookie();
+      userId = getCookie("userId"); // Get userId from cookie
       if (!userId) {
-        alert("Session expired. Please login again.");
-        window.location.href = "ad_rentout.html";
+        // Only redirect if we are on the dashboard page and not logged in
+        if (window.location.pathname.endsWith('host_dashboard.html') || window.location.pathname.endsWith('host_dashboard')) {
+          alert("Session expired. Please login again.");
+          window.location.href = "host_login.html";
+        }
       }
     }
-  
+
+    // Update navigation based on login status
+async function updateNavigation() {
+  const navLinks = document.getElementById('navLinks');
+  const sideNav = document.getElementById('sideNav');
+  const currentUserId = getCookie("userId");
+
+  // Always include static links first
+  const staticNavLinksHtml = `
+      <a href="index.html">Home</a>
+      <a href="properties.html">Properties</a>
+      <a href="about.html">About</a>
+  `;
+
+  navLinks.innerHTML = staticNavLinksHtml;
+  sideNav.innerHTML = staticNavLinksHtml;
+
+  if (currentUserId) {
+    // User is logged in
+    const client = await fetchClientData();
+    if (client) {
+      currentUser = client;
+      const userName = client.name || client.email || 'User';
+
+      // Create simple greeting for desktop nav (no dropdown, no logout button)
+      const userGreetingHtml = `
+        <span style="color: #38bdf8; font-weight: 600;">Hello! ${userName.length > 12 ? userName.substring(0, 12) + '...' : userName}</span>
+      `;
+      navLinks.insertAdjacentHTML('beforeend', userGreetingHtml);
+
+      // Append to mobile nav (simple greeting, no logout)
+      const mobileGreetingHtml = `
+        <a href="#" style="color: #38bdf8;">Hello! ${userName}</a>
+      `;
+      sideNav.insertAdjacentHTML('beforeend', mobileGreetingHtml);
+
+    } else {
+      // If client data not found, clear cookie and show login/signup
+      eraseCookie("userId");
+      navLinks.insertAdjacentHTML('beforeend', `
+        <button onclick="window.open('host_signup.html')">Sign Up</button>
+        <button onclick="window.open('host_login.html')">Login</button>
+      `);
+      sideNav.insertAdjacentHTML('beforeend', `
+        <a href="#" onclick="window.open('host_signup.html')">Sign Up</a>
+        <a href="#" onclick="window.open('host_login.html')">Login</a>
+      `);
+    }
+  } else {
+    // User is not logged in - show both buttons
+    navLinks.insertAdjacentHTML('beforeend', `
+      <button onclick="window.open('host_signup.html')">Sign Up</button>
+      <button onclick="window.open('host_login.html')">Login</button>
+    `);
+    sideNav.insertAdjacentHTML('beforeend', `
+      <a href="#" onclick="window.open('host_signup.html')">Sign Up</a>
+      <a href="#" onclick="window.open('host_login.html')">Login</a>
+    `);
+  }
+}
+    // Close dropdown if clicked outside
+    // document.addEventListener('click', (event) => {
+    //     const desktopUserProfile = document.getElementById('desktopUserProfile');
+    //     if (desktopUserProfile && !desktopUserProfile.contains(event.target)) {
+    //         desktopUserProfile.classList.remove('active-dropdown');
+    //     }
+    // });
+
+
+    // Enhanced function to check login before opening form
+    function checkLoginAndOpenForm() {
+      const currentUserId = getCookie("userId");
+
+      if (!currentUserId) {
+        // Show login prompt and redirect
+        if (confirm("Please login to add rent out properties. Click OK to go to login page.")) {
+          window.location.href = "host_login.html";
+        }
+        return false;
+      }
+
+      // User is logged in, open the form
+      const modalOverlay = document.getElementById('modalOverlay');
+      modalOverlay.classList.add('active');
+      document.body.style.overflow = 'hidden';
+      clearForm(); // Reset form when opening
+      return true;
+    }
+
     // Refresh session cookie to last 7 days
     function extendSession() {
-      const uid = getUserIdFromCookie();
+      const uid = getCookie("userId");
       if (uid) {
-        document.cookie = `userId=${uid}; path=/; max-age=${7 * 24 * 60 * 60}`;
+        setCookie("userId", uid, 7); // Extend cookie by 7 days
       }
     }
-  
+
     async function fetchClientData() {
-      userId = getUserIdFromCookie();
+      userId = getCookie("userId"); // Ensure userId is updated from cookie
       if (!userId) {
         console.warn("No userId found in cookie.");
         return null;
       }
-  
+
       try {
-        const res = await fetch(`${baseUrl}?id=${userId}`);
-        const data = await res.json();
-        if (data.length === 0) {
-          console.warn("No client data found for userId:", userId);
-          return null;
+        const res = await fetch(`${baseUrl}/${userId}`); // Fetch by ID directly
+        if (!res.ok) {
+            if (res.status === 404) {
+                console.warn(`Client with ID ${userId} not found.`);
+                eraseCookie("userId"); // Clear invalid cookie
+                checkLoginStatus(); // Re-check login, will redirect
+            }
+            throw new Error(`HTTP error! status: ${res.status}`);
         }
-        return data[0];
+        const data = await res.json();
+        return data;
       } catch (error) {
         console.error("Error fetching client data:", error);
         return null;
       }
     }
-  
+
     async function displayRentout() {
       const client = await fetchClientData();
       const container = document.getElementById("cards-container");
-      container.innerHTML = "";
-  
-      if (!client || !Array.isArray(client.rentouts)) {
-        container.innerHTML = "<p>No rentout data available.</p>";
+
+      if (!client || !Array.isArray(client.rentouts) || client.rentouts.length === 0) {
+        container.innerHTML = `
+          <div style="text-align: center; padding: 50px; color: rgba(255,255,255,0.7);">
+            <h3 style='color:white;'>No rentout properties yet</h3>
+            <p style='color:white'>Click the "+ Add Rent Out" button to add your first property!</p>
+          </div>
+        `;
         return;
       }
-  
+
+      container.innerHTML = "";
       client.rentouts.forEach((rentout, index) => {
         const card = document.createElement("div");
         card.className = "preview";
         card.innerHTML = `
           <img src="${rentout.imageUrl}" alt="House Image"/>
-          <div class="property-info">
+          <div class="preview-content">
             <h3>${rentout.houseName}</h3>
             <p><strong>Location:</strong> ${rentout.location}</p>
             <p><strong>Price:</strong> ₹${rentout.price}</p>
@@ -145,7 +854,7 @@
         container.appendChild(card);
       });
     }
-  
+
     async function updateRentout() {
       const houseName = document.getElementById("house-name").value.trim();
       const location = document.getElementById("location").value.trim();
@@ -153,53 +862,71 @@
       const contact = document.getElementById("contact").value.trim();
       const beds = document.getElementById("beds").value.trim();
       const imageInput = document.getElementById("image-file");
-  
+
       if (!houseName || !location || !price || !contact || !beds || parseInt(beds) < 1) {
         alert("Please fill all fields correctly (beds ≥ 1).");
         return;
       }
-  
+
       const client = await fetchClientData();
       if (!client) return;
-  
+
       if (!Array.isArray(client.rentouts)) client.rentouts = [];
-  
+
       const handleSave = async (imageUrl = null) => {
         const rentout = {
           houseName, location, price, contact, beds,
-          imageUrl: imageUrl || (editIndex !== null ? client.rentouts[editIndex].imageUrl : "")
+          imageUrl: imageUrl || (editIndex !== null && client.rentouts[editIndex] ? client.rentouts[editIndex].imageUrl : "")
         };
-  
+
         if (editIndex !== null) {
           client.rentouts[editIndex] = rentout;
           editIndex = null;
         } else {
           client.rentouts.push(rentout);
         }
-  
-        await fetch(`${baseUrl}/${client.id}`, {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(client)
-        });
-  
-        // Close modal after submission
-        document.getElementById('modalOverlay').classList.remove('active');
-        document.body.classList.remove('dimmed');
-  
-        clearForm();
-        displayRentout();
+
+        try {
+            const res = await fetch(`${baseUrl}/${client.id}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(client)
+            });
+            if (!res.ok) throw new Error(`Failed to update client data: ${res.statusText}`);
+
+            // Close modal after submission
+            document.getElementById('modalOverlay').classList.remove('active');
+            document.body.style.overflow = 'auto';
+
+            clearForm();
+            displayRentout(); // Re-display cards after update
+        } catch (error) {
+            console.error("Error saving rentout:", error);
+            alert("Failed to save property. Please try again.");
+        }
       };
-  
+
       if (imageInput.files.length > 0) {
+        const file = imageInput.files[0];
+        // Basic image type validation (can be more robust)
+        if (!file.type.startsWith('image/')) {
+            alert('Please select an image file (jpg, jpeg, png, gif).');
+            return;
+        }
+        if (file.size > 5 * 1024 * 1024) { // 5MB limit
+            alert('Image file is too large. Max 5MB allowed.');
+            return;
+        }
+
         const reader = new FileReader();
         reader.onloadend = () => handleSave(reader.result);
-        reader.readAsDataURL(imageInput.files[0]);
+        reader.readAsDataURL(file);
       } else {
+        // If no new image selected, use existing one if in edit mode
         handleSave();
       }
     }
-  
+
     function clearForm() {
       document.getElementById("house-name").value = "";
       document.getElementById("location").value = "";
@@ -209,13 +936,82 @@
       document.getElementById("image-file").value = "";
       document.querySelector(".submit-btn").textContent = "Submit";
       document.getElementById('heading').innerHTML = '📋 Add Rent Out';
+
+      // Reset file input display
+      const fileLabel = document.getElementById('fileLabel');
+      const imagePreview = document.getElementById('imagePreview');
+      fileLabel.classList.remove('has-file');
+      fileLabel.innerHTML = `
+        <div class="file-input-text">📷 Upload House Image</div>
+        <div class="file-input-hint">Click to select a photo of your house/property</div>
+      `;
+      imagePreview.style.display = 'none';
+      imagePreview.src = '#'; // Clear src
     }
-  
+
+    // File input handling
+    function setupFileInput() {
+      const fileInput = document.getElementById('image-file');
+      const fileLabel = document.getElementById('fileLabel');
+      const imagePreview = document.getElementById('imagePreview');
+
+      fileInput.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+          // Check if it's an image
+          if (!file.type.startsWith('image/')) {
+            alert('Please select an image file for your house/property');
+            fileInput.value = ''; // Clear the input
+            imagePreview.style.display = 'none';
+            fileLabel.classList.remove('has-file');
+            fileLabel.innerHTML = `<div class="file-input-text">📷 Upload House Image</div><div class="file-input-hint">Click to select a photo of your house/property</div>`;
+            return;
+          }
+
+          // Check file size (max 5MB)
+          if (file.size > 5 * 1024 * 1024) {
+            alert('Image size should be less than 5MB');
+            fileInput.value = ''; // Clear the input
+            imagePreview.style.display = 'none';
+            fileLabel.classList.remove('has-file');
+            fileLabel.innerHTML = `<div class="file-input-text">📷 Upload House Image</div><div class="file-input-hint">Click to select a photo of your house/property</div>`;
+            return;
+          }
+
+          // Show file name and preview
+          fileLabel.classList.add('has-file');
+          fileLabel.innerHTML = `
+            <div class="file-input-text">✅ ${file.name}</div>
+            <div class="file-input-hint">Click to change house image</div>
+          `;
+
+          // Show image preview
+          const reader = new FileReader();
+          reader.onload = function(e) {
+            imagePreview.src = e.target.result;
+            imagePreview.style.display = 'block';
+          };
+          reader.readAsDataURL(file);
+        } else {
+            // No file selected, reset label and preview
+            imagePreview.style.display = 'none';
+            imagePreview.src = '#';
+            fileLabel.classList.remove('has-file');
+            fileLabel.innerHTML = `<div class="file-input-text">📷 Upload House Image</div><div class="file-input-hint">Click to select a photo of your house/property</div>`;
+        }
+      });
+    }
+
     async function editRentout(index) {
       const client = await fetchClientData();
       if (!client || !Array.isArray(client.rentouts)) return;
-  
+
       const rentout = client.rentouts[index];
+      if (!rentout) { // Add a check if rentout exists at index
+          console.error("Rentout not found at index:", index);
+          return;
+      }
+
       document.getElementById("house-name").value = rentout.houseName;
       document.getElementById("location").value = rentout.location;
       document.getElementById("price").value = rentout.price;
@@ -224,79 +1020,127 @@
       editIndex = index;
       document.getElementById('heading').innerHTML = '📋 Edit Rent Out';
       document.querySelector(".submit-btn").textContent = "Update";
-      
+
       // Open the modal for editing
       document.getElementById('modalOverlay').classList.add('active');
-      document.body.classList.add('dimmed');
+      document.body.style.overflow = 'hidden';
+
+      // Load image preview if it exists
+      const imagePreview = document.getElementById('imagePreview');
+      const fileLabel = document.getElementById('fileLabel');
+      if (rentout.imageUrl) {
+        imagePreview.src = rentout.imageUrl;
+        imagePreview.style.display = 'block';
+        fileLabel.classList.add('has-file');
+        fileLabel.innerHTML = `
+          <div class="file-input-text">✅ Image Loaded</div>
+          <div class="file-input-hint">Click to change house image</div>
+        `;
+      } else {
+        imagePreview.style.display = 'none';
+        imagePreview.src = '#';
+        fileLabel.classList.remove('has-file');
+        fileLabel.innerHTML = `
+          <div class="file-input-text">📷 Upload House Image</div>
+          <div class="file-input-hint">Click to select a photo of your house/property</div>
+        `;
+      }
     }
-  
+
     async function deleteRentout(index) {
+      if (!confirm("Are you sure you want to delete this property?")) return;
+
       const client = await fetchClientData();
       if (!client || !Array.isArray(client.rentouts)) return;
-  
-      client.rentouts.splice(index, 1);
-  
-      await fetch(`${baseUrl}/${client.id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(client)
-      });
-  
-      displayRentout();
+
+      // Check if the item exists at the index before splicing
+      if (index > -1 && index < client.rentouts.length) {
+          client.rentouts.splice(index, 1);
+      } else {
+          console.error("Invalid index for deletion:", index);
+          return;
+      }
+
+
+      try {
+        const res = await fetch(`${baseUrl}/${client.id}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(client)
+        });
+        if (!res.ok) throw new Error(`Failed to delete rentout: ${res.statusText}`);
+        displayRentout(); // Re-display cards after deletion
+      } catch (error) {
+          console.error("Error deleting rentout:", error);
+          alert("Failed to delete property. Please try again.");
+      }
     }
-  
-    function logout() {
-      document.cookie = "userId=; path=/; max-age=0";
-      window.location.href = "ad_rentout.html";
-    }
-  
+
+    // function logout() {
+    //   if (confirm("Are you sure you want to logout?")) {
+    //     eraseCookie("userId"); // Remove the userId cookie
+    //     window.location.href = "host_login.html"; // Redirect to login page after logout
+    //   }
+    // }
+
     // Modal functionality
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', async function() {
       // Show loading animation for 1 second
       setTimeout(function() {
         document.querySelector('.loader-container').style.display = 'none';
       }, 1000);
-      
+
+      // Check login status first and redirect if not logged in
+      checkLoginStatus();
+
+      // Initialize navigation (after login check)
+      await updateNavigation();
+
+      // Setup file input functionality
+      setupFileInput();
+
       // Modal controls
       const openFormBtn = document.getElementById('openFormBtn');
       const closeFormBtn = document.getElementById('closeFormBtn');
       const modalOverlay = document.getElementById('modalOverlay');
-      
+
       openFormBtn.addEventListener('click', function() {
-        modalOverlay.classList.add('active');
-        document.body.classList.add('dimmed');
-        clearForm(); // Reset form when opening
+        checkLoginAndOpenForm(); // This function now handles the login check
       });
-      
+
       closeFormBtn.addEventListener('click', function() {
         modalOverlay.classList.remove('active');
-        document.body.classList.remove('dimmed');
-        clearForm(); // Reset form when closing
-        editIndex = null; // Reset edit mode
+        document.body.style.overflow = 'auto';
+        clearForm();
+        editIndex = null;
       });
-      
+
       // Close when clicking outside the form
       modalOverlay.addEventListener('click', function(e) {
         if (e.target === modalOverlay) {
           modalOverlay.classList.remove('active');
-          document.body.classList.remove('dimmed');
+          document.body.style.overflow = 'auto';
           clearForm();
           editIndex = null;
         }
       });
-      
-      extendSession(); // extend session on page load
-      setInterval(checkLoginStatus, 6000); // check every 1 minute
-      displayRentout();
+
+      // Hamburger menu
+      document.getElementById('hamburger').addEventListener('click', function () {
+        document.getElementById('sideNav').classList.toggle('open');
+        this.classList.toggle('active');
+      });
+
+      // Extend session and set interval for login status check
+      extendSession(); // Extend cookie validity
+      // This setInterval now primarily keeps the session alive, initial check handles redirection
+      setInterval(checkLoginStatus, 60 * 60 * 1000); // Check every hour for session expiry
+
+      // Initial display of rentouts (only if logged in)
+      if (getCookie("userId")) {
+          displayRentout();
+      }
     });
   </script>
-
-<script>
-  document.getElementById('hamburger').addEventListener('click', function () {
-    document.getElementById('sideNav').classList.toggle('open');
-    this.classList.toggle('active');
-  });
-</script>
-  
 </body>
 </html>

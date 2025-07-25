@@ -6,6 +6,9 @@
   <title>Login Page</title>
   <script src="https://accounts.google.com/gsi/client" async defer></script>
   <link rel="stylesheet" href="client_login.css">
+  <style>
+    
+  </style>
 </head>
 <body>
 
@@ -21,7 +24,7 @@
       <a href="Host.html">Rent out users</a>
       <a href="properties.html">Properties</a>
       <a href="about.html">About</a>
-      <button onclick="window.open('host_login.html')">Logout</button>
+      <!-- <button onclick="window.open('client_login.html')">Logout</button> -->
     </div>
 
     <div class="hamburger" id="hamburger">
@@ -43,9 +46,9 @@
 <!-- Main Content -->
 <div class="main-content">
   <div class="container">
-    <h2>Client Login</h2>
-    <input type="email" id="email" placeholder="Email" required />
-    <input type="password" id="password" placeholder="Password" required />
+    <h2 style="color:white">Client Login</h2>
+    <input style="width:90%" type="email" id="email" placeholder="Email" required autofocus/>
+    <input  style="width:90%" type="password" id="password" placeholder="Password" required />
     <div class="forgot-password">
       <a href="#" id="forgot-pwd-link">Forgot Password?</a>
     </div>
@@ -62,7 +65,7 @@
     </div>
 
     <div id="alert" class="alert"></div>
-    <div class="switch">
+    <div class="switch" style="color:white">
       Don't have an account? <a href="client_signup.html">Sign Up</a>
     </div>
   </div>
@@ -81,7 +84,7 @@
 </div>
 
 <script>
-  const url = "http://localhost:8080/client_data";
+  const url = "http://localhost:3000/client_data";
   const loginBtn = document.getElementById("login");
   const forgotPwdLink = document.getElementById("forgot-pwd-link");
   const forgotPwdModal = document.getElementById("forgot-pwd-modal");

@@ -259,12 +259,23 @@
       text-decoration: none;
       font-weight: 500;
       transition: color 0.3s;
+      position: relative;
     }
 
-    .nav-links a:hover {
-      color: #38bdf8;
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: white;
+      transition: width 0.3s ease;
     }
 
+    .nav-links a:hover::after {
+      width: 100%;
+    }
     .hamburger {
       display: none;
       flex-direction: column;

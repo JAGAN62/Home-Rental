@@ -154,7 +154,7 @@
 
     async function fetchAndRenderProperties() {
       try {
-        const res = await fetch("http://localhost:8080/clients");
+        const res = await fetch("http://localhost:3000/clients");
         const data = await res.json();
         allData = data;
         renderProperties(data);
@@ -397,9 +397,3 @@
 
 </body>
 </html>
-
-<!-- 
-         <input id="name" type="text" name="username" placeholder="Your Name" required />
-        <input id="email" type="email" name="useremail" placeholder="Your Email" required />
-        <textarea id="message" placeholder="Your Message" name="message" required></textarea> 
- -->
