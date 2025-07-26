@@ -141,7 +141,7 @@
     form#contactForm input, form#contactForm textarea { padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; width: 100%; }
     form#contactForm button { background: #0ea5e9; color: white; padding: 10px; border: none; border-radius: 6px; cursor: pointer; }
     footer { background: #1e293b; color: white; text-align: center; padding: 15px; }
-    .typewriter { overflow: hidden; color: #faf7f7; white-space: nowrap; margin: 0 auto; letter-spacing: 0.1em; width: 0; animation: typing 6s steps(20, end) 2, blink-caret 0.75s step-end 2; animation-fill-mode: forwards; }
+    .typewriter { overflow: hidden; color: #9b9797; white-space: nowrap; margin: 0 auto; letter-spacing: 0.1em; width: 0; animation: typing 6s steps(20, end) 2, blink-caret 0.75s step-end 2; animation-fill-mode: forwards; }
 
 #messageDiv{
     display:none;
@@ -261,12 +261,12 @@
   bottom: -6px;
   background: conic-gradient(
     from 0deg,
-    #ffea00,  /* Bright Yellow */
-    #ff4d00,  /* Orange-Red */
-    #39ff14,  /* Neon Green */
-    #ff0055,  /* Pinkish Red */
+    #fbfbfb,  /* Bright Yellow */
+    #f6f3f2,  /* Orange-Red */
+    #f2f6f1,  /* Neon Green */
+    #f9f7f8,  /* Pinkish Red */
     #ffffff,  /* White */
-    #ffea00   /* Loop back to Yellow */
+    #e2dfdf   /* Loop back to Yellow */
   );
   /* border-radius: 50px; */
   z-index: -2;
@@ -301,8 +301,8 @@
     @media (max-width: 600px) {
         /* Header (hero section) */
         header.hero {
-          padding: 20px;
           text-align: center;
+          padding: 20px;
         }
       
         .hero h1 {
@@ -348,7 +348,7 @@
           }
         
           .property-card {
-            width: 90%;
+            width: 100%;
             max-width: 300px;
             padding: 10px;
             border-radius: 8px;
@@ -378,5 +378,7 @@
       nav{
         padding:8px 15px;
       }
+
+
             }
       

@@ -154,7 +154,7 @@
 
     async function fetchAndRenderProperties() {
       try {
-        const res = await fetch("http://localhost:3000/clients");
+        const res = await fetch("https://home-rental-b3lp.onrender.com/clients");
         const data = await res.json();
         allData = data;
         renderProperties(data);
