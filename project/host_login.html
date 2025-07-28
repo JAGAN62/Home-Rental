@@ -2,46 +2,236 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Client Login</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Host Login</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
     body {
       font-family: 'Poppins', sans-serif;
-      background: linear-gradient(135deg, #89f7fe, #66a6ff);
+      background: linear-gradient(135deg, #303030, #5f5f60);
       display: flex;
       align-items: center;
       justify-content: center;
       height: 100vh;
+      position: relative;
     }
+
+    body::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 40% 40%, rgba(120, 219, 226, 0.2) 0%, transparent 50%);
+      pointer-events: none;
+    }
+
     .container {
-      background: #fff;
+      background: rgba(56, 56, 56, 0.203);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(241, 238, 238, 0.2);
       padding: 30px;
-      border-radius: 12px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      border-radius: 20px;
+      box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
       max-width: 400px;
       width: 90%;
+      position: relative;
     }
+
+    .container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(45deg, 
+        rgba(255, 255, 255, 0.1) 0%, 
+        rgba(255, 255, 255, 0.05) 50%, 
+        rgba(255, 255, 255, 0.1) 100%);
+      border-radius: 20px;
+      pointer-events: none;
+    }
+
+    h2 {
+      color: rgba(255, 255, 255, 0.95);
+      text-align: center;
+      margin-bottom: 30px;
+      font-size: 24px;
+      font-weight: 600;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      position: relative;
+      z-index: 1;
+    }
+
     input, button {
       width: 100%;
       padding: 12px;
       margin: 10px 0;
       font-size: 16px;
-      border-radius: 8px;
+      border-radius: 15px;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      background: rgba(255, 255, 255, 0.15);
+      color: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      transition: all 0.3s ease;
+      position: relative;
+      z-index: 1;
     }
-    button {
-      background-color: #007bff;
-      color: white;
+    
+    input::placeholder {
+      color: rgba(255, 255, 255, 0.6);
+    }
+    
+    input:focus {
+      outline: none;
+      border-color: rgba(255, 255, 255, 0.4);
+      background: rgba(255, 255, 255, 0.2);
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+      transform: translateY(-2px);
+    }
+
+    .password-wrapper {
+      position: relative;
+      display: inline-block;
+      width: 100%;
+    }
+
+    .password-toggle {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
       border: none;
+      cursor: pointer;
+      color: rgba(255, 255, 255, 0.7);
+      padding: 4px;
+      width: auto;
+      margin: 0;
+      border-radius: 50%;
+      transition: all 0.3s ease;
     }
-    button:hover {
-      background-color: #0056b3;
+
+    .password-toggle:hover {
+      color: rgba(255, 255, 255, 1);
+      /* background: rgba(255, 255, 255, 0.1); */
     }
+
+    .password-toggle svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    button:not(.password-toggle) {
+      /* background: rgba(255, 255, 255, 0.2); */
+      color: rgba(255, 255, 255, 0.95);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: 600;
+      position: relative;
+      overflow: hidden;
+    }
+
+    button:not(.password-toggle)::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.5s ease;
+    }
+
+    button:not(.password-toggle):hover {
+      /* background: rgba(255, 255, 255, 0.25); */
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    button:not(.password-toggle):hover::before {
+      left: 100%;
+    }
+
+    .switch {
+      text-align: center;
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 14px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .switch a {
+      color: rgba(255, 255, 255, 1);
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .switch a:hover {
+      text-decoration: underline;
+      text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+    }
+ .close-btn {
+      position: absolute;
+      top: -60px;
+      left: 315px;
+      background: none;
+      border: none;
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 20px;
+      cursor: pointer;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0;
+      padding: 0;
+    }
+
+    .close-btn:hover {
+      /* background: rgba(255, 255, 255, 0.2); */
+      color: rgb(222, 8, 8);
+    }
+
   </style>
 </head>
 <body>
   <div class="container">
-    <h2>🔐Host Login</h2>
+    <h2>Host Login</h2>
+    
+<button id="close-btn" class="close-btn">X</button>
     <input type="text" id="login-id" placeholder="User ID" />
-    <input type="password" id="login-password" placeholder="Password" />
+    <div class="password-wrapper">
+      <input type="password" id="login-password" placeholder="Password" />
+      <button type="button" class="password-toggle" id="password-toggle">
+        <svg id="eye-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+          <circle cx="12" cy="12" r="3"></circle>
+        </svg>
+        <svg id="eye-closed" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: none;">
+          <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+          <line x1="1" y1="1" x2="23" y2="23"></line>
+        </svg>
+      </button>
+    </div>
     <button id="login-btn">Login</button>
     <div class="switch">
       Don't have an account? <a href="host_signup.html">Sign Up</a>
@@ -49,15 +239,36 @@
   </div>
 
   <script>
-    document.getElementById("login-btn").addEventListener("click", () => {
-      const userId = document.getElementById("login-id").value.trim();
-      const password = document.getElementById("login-password").value.trim();
+    // Password toggle functionality
+    const passwordInput = document.getElementById('login-password');
+    const passwordToggle = document.getElementById('password-toggle');
+    const eyeOpen = document.getElementById('eye-open');
+    const eyeClosed = document.getElementById('eye-closed');
+
+    passwordToggle.addEventListener('click', () => {
+      if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        eyeOpen.style.display = 'none';
+        eyeClosed.style.display = 'block';
+      } else {
+        passwordInput.type = 'password';
+        eyeOpen.style.display = 'block';
+        eyeClosed.style.display = 'none';
+      }
+    });
+
+    // Form submission
+    document.getElementById('login-btn').addEventListener('click', (e) => {
+      e.preventDefault();
+      
+      const userId = document.getElementById('login-id').value.trim();
+      const password = document.getElementById('login-password').value.trim();
 
       fetch(`https://home-rental-b3lp.onrender.com/clients?id=${userId}`)
         .then(res => res.json())
         .then(data => {
           if (data.length === 0) {
-            alert("❌ User not found");
+            alert('User not found');
             return;
           }
 
@@ -68,12 +279,19 @@
             expiry.setDate(expiry.getDate() + 7);
             document.cookie = `userId=${userId}; path=/; expires=${expiry.toUTCString()}`;
 
-            window.location.href = `Host.html`;
+            window.location.href = 'Host.html';
           } else {
-            alert("❌ Incorrect password");
+            alert('Incorrect password');
           }
         });
     });
+
+    document.getElementById('close-btn').addEventListener('click',()=>(
+      // window.history.back()
+      // document.getElementsByClassName('container')[0].style.display='none'
+      // window.location.href = 'Host.html'
+      window.close()
+    ))
   </script>
 </body>
 </html>

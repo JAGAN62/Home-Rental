@@ -176,11 +176,36 @@
       100% { transform: rotate(360deg); }
     }
 
+
+    .close-btn {
+      position: absolute;
+      top: 25px;
+      left: 390px;
+      background: none;
+      color: rgba(244, 242, 242, 0.901);
+      font-size: 20px;
+      cursor: pointer;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0;
+      padding: 0;
+    }
+
+    .close-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+      color: rgb(247, 4, 4);
+    }
+
   </style>
 </head>
 <body>
   <div class="container">
     <h2>Host Signup</h2>
+    <button class="close-btn" id="close-btn">X</button>
     <div class="input-group">
       <input type="text" id="user-id" placeholder="Choose User ID" autofocus/>
     </div>
@@ -248,6 +273,10 @@
         alert("❗ Network error or JSON Server not running.");
       }
     });
+
+    document.getElementById('close-btn').addEventListener('click',()=>(
+      window.close()
+    ))
   </script>
 </body>
 </html>
