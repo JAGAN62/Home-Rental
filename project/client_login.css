@@ -99,7 +99,6 @@ nav {
       position: relative;
       transition: color 0.3s;
     }
-
     .nav-links a:hover {
       color: rgb(252, 249, 252);
     }
@@ -211,7 +210,9 @@ nav {
       border-radius: 10px;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
       text-align: center;
-      width: 300px;
+      width: 350px;
+      position:relative;
+
     }
 
 
@@ -368,6 +369,8 @@ nav {
       width: 100% !important;
       min-width: 200px !important;
     }
+
+    
     
     @media (max-width:600px) {
       .google-btn {

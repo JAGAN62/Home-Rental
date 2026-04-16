@@ -5,8 +5,438 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Login Page</title>
   <script src="https://accounts.google.com/gsi/client" async defer></script>
-  <link rel="stylesheet" href="client_login.css">
+  <!-- <link rel="stylesheet" href="client_login.css"> -->
+
   <style>
+    
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+       overflow-x: hidden;
+      overscroll-behavior: none;
+      scroll-behavior: auto;
+      overflow-y:hidden;
+      background: 
+        linear-gradient(135deg, rgba(102, 126, 234, 0.3) 0%, rgba(118, 75, 162, 0.3) 25%, rgba(240, 147, 251, 0.3) 50%, rgba(245, 87, 108, 0.3) 75%, rgba(79, 172, 254, 0.3) 100%),
+        url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80');
+      background-attachment: fixed;
+     background-repeat: no-repeat;
+     
+    }
+    /* .login-btn {
+      background-color: #0ea5e9;
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .login-btn:hover { background-color: #0284c7; }  */
+
+    .fancy-input {
+  padding: 14px 12px;
+  font-size: 16px;
+  border: 2px solid gray;
+  border-radius: 5px;
+  transition: border-color 0.3s, color 0.3s;
+  outline:none;
+}
+
+.fancy-input:focus {
+  border-color: blue;
+  outline: none;
+}
+
+/* Placeholder animation (faux float effect) */
+.fancy-input::placeholder {
+  color: gray;
+  transition: all 0.3s ease;
+  transform: translateY(0px);
+}
+
+
+.fancy-input:focus::placeholder {
+  transform: translateY(-20px);
+  font-size: 12px;
+  color: blue;
+  font-size: 14px;
+}
+
+nav {
+      z-index: 1000;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 30px;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+
+    .logo img {
+      width: 40px;
+      height: 40px;
+      object-fit: cover;
+      margin-right: 10px;
+      cursor: pointer;
+      border-radius: 50%;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+    }
+
+    .nav-links a {
+      color: white;
+      text-decoration: none;
+      font-weight: 500;
+      position: relative;
+      transition: color 0.3s;
+    }
+    .nav-links a:hover {
+      color: rgb(252, 249, 252);
+    }
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: #f6f4f6d4;
+      transition: width 0.3s ease;
+    }
+
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+/* 
+    .nav-links button {
+      background: rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 25px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+    } */
+
+    .nav-links button:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: translateY(-2px);
+      color:rgb(248, 23, 60);
+    }
+
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      cursor: pointer;
+      gap: 5px;
+    }
+
+    .hamburger div {
+      width: 25px;
+      height: 3px;
+      background: white;
+      transition: all 0.3s ease;
+    }
+
+    .hamburger.active div:nth-child(1) {
+      transform: rotate(45deg) translate(5px, 5px);
+    }
+
+    .hamburger.active div:nth-child(2) {
+      opacity: 0;
+    }
+
+    .hamburger.active div:nth-child(3) {
+      transform: rotate(-45deg) translate(6px, -6px);
+    }
+
+    /* Side nav overlay for mobile */
+    .side-nav-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+      z-index: 998;
+    }
+
+    .side-nav-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .side-nav {
+      position: fixed;
+      top: 0;
+      left: -100%;
+      height: 100%;
+      width: 250px;
+      /* background: rgba(30, 41, 59, 0.9); */
+      background :transparent;
+      backdrop-filter: blur(20px);
+      border-right: 1px solid rgba(255, 255, 255, 0.2);
+      padding-top: 70px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      padding-left: 20px;
+      transition: left 0.3s ease;
+      z-index: 999;
+    }
+
+    .side-nav a {
+      color: white;
+      text-decoration: none;
+      font-size: 1.1rem;
+      transition: color 0.3s;
+    }
+
+    .side-nav a:hover {
+      color: #38bdf8;
+    }
+
+    .side-nav.open {
+      left: 0;
+    }
+
+
+    .main-content {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: calc(100vh - 70px);
+      padding-top: 20px;
+      
+    }
+    
+    .container {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 20px;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      width: 350px;
+      position:relative;
+
+    }
+
+
+     .container input[type="email"],
+    .container input[type="password"] {
+      width: 100%;
+      /* padding: 1rem; */
+      margin-bottom: 1.5rem;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 10px;
+      color: rgba(250, 64, 185, 0.864);
+      font-size: 1rem;
+      backdrop-filter: blur(20px);
+      transition: all 0.3s ease;
+    }
+    .container input[type="email"]:focus,
+    .container input[type="password"]:focus {
+      outline: none;
+      border-color: rgba(255, 255, 255, 0.741);
+      background: rgba(255, 255, 255, 0.15);
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+    }
+
+    .container input::placeholder {
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    input, #login {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+    }
+
+   #login {
+      width: 100%;
+      /* padding: 1rem; */
+      background: rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 25px;
+      color: white;
+      font-size: 1.1rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+      margin-bottom: 1.5rem;
+    }
+
+      #login:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+
+
+    .alert {
+      font-size: 14px;
+      margin-top: 10px;
+      color: red;
+    }
+
+    .switch {
+      margin-top: 10px;
+      font-size: 14px;
+    }
+
+    .switch a {
+      color: #1100ff;
+      text-decoration: none;
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      margin: 15px 0;
+      color: #666;
+    }
+
+    .divider::before, .divider::after {
+      content: "";
+      flex: 1;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .divider span {
+      padding: 0 10px;
+    }
+
+    .google-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      padding: 8px 10px;
+      margin: 10px 0;
+      cursor: pointer;
+      font-weight: 500;
+    }
+    .google-btn img {
+      height: 20px;
+      margin-right: 10px;
+    }
+
+    .forgot-password {
+      text-align: right;
+      margin: 5px 0;
+      font-size: 14px;
+    }
+
+    .forgot-password a {
+      color: #451af3;
+      text-decoration: none;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1001;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    .modal-content {
+      background-color: white;
+      margin: 15% auto;
+      padding: 20px;
+      width: 300px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .close {
+      float: right;
+      cursor: pointer;
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    /* Mobile-specific fixes for Google button */
+    #google-signin-container {
+      width: 100%;
+      margin: 10px 0;
+    }
+    
+    #google-signin-container iframe {
+      width: 100% !important;
+      min-width: 200px !important;
+    }
+    #close-btn{
+      position:absolute;
+      color:red;
+      border-radius:40px;
+      top:20px;
+      font-size:20px;
+      background-color: transparent;
+      border:none;
+      right:20px;
+    }
+    #close-btn:hover{
+       color:red;
+       border: 1px solid red;
+    }
+    
+    
+    @media (max-width:600px) {
+      .google-btn {
+        padding: 12px 10px;
+      }
+        nav {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .nav-links {
+        display: none;
+      }
+
+      .hamburger {
+        display: flex;
+        margin-left: auto;
+      }
+
+    }
     
   </style>
 </head>
@@ -34,6 +464,9 @@
     </div>
   </nav>
 
+
+  <div class="side-nav-overlay" id="sideNavOverlay"></div>
+
   <!-- Side Menu -->
   <div class="side-nav" id="sideNav">
     <a href="index.html">Home</a>
@@ -47,6 +480,7 @@
 <div class="main-content">
   <div class="container">
     <h2 style="color:white">Client Login</h2>
+    <button id="close-btn" title="close">X</button>
     <input style="width:90%" type="email" id="email" placeholder="Email" required autofocus/>
     <input  style="width:90%" type="password" id="password" placeholder="Password" required />
     <div class="forgot-password">
@@ -57,7 +491,7 @@
     <div class="divider"><span>OR</span></div>
 
     <!-- Google Sign-In Button Container -->
-    <div id="google-signin-container">
+    <div id="google-signin-container" style="margin-left:25px">
       <button id="google-signin" class="google-btn">
         <img src="https://th.bing.com/th/id/OIP.xkSg_WkY-2dfQ9RJQnsIzQHaHa?rs=1&pid=ImgDetMain" alt="Google Logo">
         Sign in with Google
@@ -200,10 +634,137 @@
   };
 </script>
 <script>
-  document.getElementById('hamburger').addEventListener('click', function () {
-    document.getElementById('sideNav').classList.toggle('open');
-    this.classList.toggle('active');
-  });
+  document.getElementById('close-btn').addEventListener('click',function(){
+    window.close()
+  })
 </script>
+
+<script>
+  const hamburger = document.getElementById('hamburger');
+  const sideNav = document.getElementById('sideNav');
+  const sideNavOverlay = document.getElementById('sideNavOverlay');
+
+  // Function to open side navigation
+  function openSideNav() {
+    sideNav.classList.add('open');
+    sideNavOverlay.classList.add('active');
+    hamburger.classList.add('active');
+  }
+
+  // Function to close side navigation
+  function closeSideNav() {
+    sideNav.classList.remove('open');
+    sideNavOverlay.classList.remove('active');
+    hamburger.classList.remove('active');
+  }
+
+  // Hamburger menu functionality
+  hamburger.addEventListener('click', function (e) {
+    e.stopPropagation(); // Prevent click from bubbling up
+    if (sideNav.classList.contains('open')) {
+      closeSideNav();
+    } else {
+      openSideNav();
+    }
+  });
+
+  // Close side nav when clicking on overlay
+  sideNavOverlay.addEventListener('click', function() {
+    closeSideNav();
+  });
+
+  // Close side nav when clicking anywhere on the document
+  document.addEventListener('click', function(e) {
+    // Check if side nav is open and click is not inside side nav
+    if (sideNav.classList.contains('open') && !sideNav.contains(e.target)) {
+      closeSideNav();
+    }
+  });
+
+  // Close side nav when clicking on side nav links (for mobile UX)
+  sideNav.addEventListener('click', function(e) {
+    if (e.target.tagName === 'A') {
+      closeSideNav();
+    }
+  });
+
+  // Close with Escape key
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && sideNav.classList.contains('open')) {
+      closeSideNav();
+    }
+  });
+
+  // Handle touch events for mobile
+  let touchStartX = 0;
+  let touchStartY = 0;
+
+  document.addEventListener('touchstart', function(e) {
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+  });
+
+  document.addEventListener('touchend', function(e) {
+    if (sideNav.classList.contains('open')) {
+      const touchEndX = e.changedTouches[0].clientX;
+      const touchEndY = e.changedTouches[0].clientY;
+      const deltaX = touchStartX - touchEndX;
+      const deltaY = Math.abs(touchStartY - touchEndY);
+      
+      // If swipe left with more horizontal than vertical movement
+      if (deltaX > 50 && deltaY < 100) {
+        closeSideNav();
+      }
+    }
+  });
+
+  // Navigation color change on scroll
+  function updateNavColors() {
+    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    const documentHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const halfPage = documentHeight / 2;
+    
+    const navLinks = document.querySelectorAll('.nav-links a');
+    const logoText = document.querySelector('.logo span');
+    
+    if (scrollTop >= halfPage) {
+      // After half page - change to blue
+      navLinks.forEach(link => {
+        link.style.color = 'rgb(20, 15, 92)';
+      });
+      if (logoText) {
+        logoText.style.color = 'rgb(20, 15, 92)';
+      }
+    } else {
+      // Before half page - keep white
+      navLinks.forEach(link => {
+        link.style.color = 'white';
+      });
+      if (logoText) {
+        logoText.style.color = 'white';
+      }
+    }
+  }
+
+  function throttle(func, limit) {
+    let inThrottle;
+    return function() {
+      const args = arguments;
+      const context = this;
+      if (!inThrottle) {
+        func.apply(context, args);
+        inThrottle = true;
+        setTimeout(() => inThrottle = false, limit);
+      }
+    };
+  }
+
+  // Event listener for scroll
+  window.addEventListener('scroll', throttle(updateNavColors, 16));
+
+  // Initialize on page load
+  updateNavColors();
+</script>
+
 </body>
 </html>
